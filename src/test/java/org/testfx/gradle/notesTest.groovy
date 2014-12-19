@@ -17,34 +17,56 @@ class NotesTest {
     ReleaseNotesPrinter printer
 
     final String printedNotes0 = """
+        ## v1.0.2-SNAPSHOT (December 19, 2014)
+
+        5 commits by 2 authors:
+        - **Alice Henderson** (@alice) &mdash; 4 commits
+        - **Bob Sanders** (@bob) &mdash; 1 commit
+
+        4 merged pull requests:
+        - **chore(Quux):** ... (#21) &mdash; 1 commit
+        - **fix(Quux):** ... (#22) &mdash; 2 commits
+        - **test:** ... (#23) &mdash; 1 commit
+        - ... (#24) &mdash; 1 commit
+    """.stripIndent().trim() + "\n"
+
+    final String printedNotes1 = """
+        ## v1.0.1 (March 23, 2012)
+
+        4 commits by 2 authors:
+        - **Carol Sanders** (@carol) &mdash; 2 commits
+        - **Ted Henderson** (@ted) &mdash; 2 commits
+
+        2 merged pull requests:
+        - **docs(Baz):** ... (#12) &mdash; 2 commits
+        - **refactor(Bar):** ... (#11) &mdash; 2 commits
+    """.stripIndent().trim() + "\n"
+
+    final String printedNotes2 = """
         ## v1.0.0 (January 1, 2010)
 
-        - 37 commits by 4 authors:
-          - **Alice Henderson** @alice (19 commits)
-          - **Bob Sanders** @bob (8 commits)
-          - **Carol Sanders** @carol, **Ted Henderson** @ted (5 commits)
+        3 commits by 1 author:
+        - **Alice Henderson** (@alice) &mdash; 3 commits
 
-        - 5 merged pull requests:
-          - **docs(Foo):** ... #123 (5 commits)
-          - **feat(Bar):** ... #123 (10 commits)
-          - **feat(Baz):** ... #236 (9 commits)
+        1 merged pull request:
+        - **feat(Foo):** ... (#1) &mdash; 3 commits
     """.stripIndent().trim() + "\n"
 
     @Before
     void setup() {
         releases = [
             new Release(tagName: "v1.0.0", releasedAt: parse("2010-01-01T00:00Z")),
-            new Release(tagName: "v1.0.1", releasedAt: parse("2012-01-01T00:00Z")),
+            new Release(tagName: "v1.0.1", releasedAt: parse("2012-03-23T00:00Z")),
             new Release(tagName: "v1.0.2-SNAPSHOT", releasedAt: now()),
         ]
         pulls = [
             new PullRequest(number: "1", mergedAt: parse("2009-06-10T00:00Z"), title: "feat(Foo): ..."),
 
-            new PullRequest(number: "11", mergedAt: parse("2011-06-10T00:00Z"), title: "refactor(Baz): ..."),
-            new PullRequest(number: "12", mergedAt: parse("2011-06-10T00:00Z"), title: "docs(Quux): ..."),
+            new PullRequest(number: "11", mergedAt: parse("2011-06-10T00:00Z"), title: "refactor(Bar): ..."),
+            new PullRequest(number: "12", mergedAt: parse("2011-06-10T00:00Z"), title: "docs(Baz): ..."),
 
-            new PullRequest(number: "21", mergedAt: parse("2013-06-10T00:00Z"), title: "chore(Quuux): ..."),
-            new PullRequest(number: "22", mergedAt: parse("2013-06-10T00:00Z"), title: "fix(Quuux): ..."),
+            new PullRequest(number: "21", mergedAt: parse("2013-06-10T00:00Z"), title: "chore(Quux): ..."),
+            new PullRequest(number: "22", mergedAt: parse("2013-06-10T00:00Z"), title: "fix(Quux): ..."),
             new PullRequest(number: "23", mergedAt: parse("2013-06-10T00:00Z"), title: "test: ..."),
             new PullRequest(number: "24", mergedAt: parse("2013-06-10T00:00Z"), title: "..."),
         ]
@@ -117,7 +139,6 @@ class NotesTest {
         assert commits[0].refAuthor == authors[0]
         assert commits[1].refAuthor == authors[0]
         assert commits[2].refAuthor == authors[0]
-
         assert commits[3].refAuthor == authors[3]
         assert commits[4].refAuthor == authors[3]
         assert commits[5].refAuthor == authors[2]
@@ -131,12 +152,10 @@ class NotesTest {
         releaseNotes.assignPullRequestsToCommits()
         releaseNotes.assignCommitsToAuthors()
 
-        //println printedNotes0
-
+        // expect:
         releaseNotes.releases.reverse().each { rel ->
             println printer.generateReleaseNotes(rel)
         }
-
     }
 
 }

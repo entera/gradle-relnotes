@@ -1,4 +1,5 @@
 package org.testfx.gradle
+
 import java.time.ZonedDateTime
 import java.time.format.DateTimeFormatter
 import java.time.format.FormatStyle
@@ -107,30 +108,34 @@ class ReleaseNotesPrinter {
             .unique(false) { it.authorName }.size()
 
         def output = new StringBuilder()
-        output << "- ${plural(numOfCommits, "commit", "commits")} by " +
-            "${plural(numOfAuthors, "author", "authors")}:\n"
+        output << "${plural(numOfCommits, "commit", "commits")} by" +
+            " ${plural(numOfAuthors, "author", "authors")}:\n"
         for (author in releaseAuthors) {
             def numOfAuthorCommits = releaseCommits
                 .findAll { it.refAuthor == author }.size()
-            output << "  - **${author.name}** @${author.login} " +
-                "(${plural(numOfAuthorCommits, "commit", "commits")})\n"
+            output << "- **${author.name}** (@${author.login})" +
+                " &mdash; ${plural(numOfAuthorCommits, "commit", "commits")}\n"
         }
         return output.toString()
     }
 
     private String generatePullList(Release release) {
+        def pullTitlePattern = "(.+?:)(.+)"
+        def pullTitleReplacement = "**\$1**\$2"
+
         def pullsInRelease = releaseNotes.pulls
             .findAll { it.refRelease == release }
-            .sort(false) { it.title }
+            .sort(false) { it.title.replaceFirst(pullTitlePattern, pullTitleReplacement) }
         def numOfPulls = pullsInRelease.size()
 
         def output = new StringBuilder()
-        output << "- ${plural(numOfPulls, "merged pull request", "merged pull requests")}:\n"
+        output << "${plural(numOfPulls, "merged pull request", "merged pull requests")}:\n"
         for (pull in pullsInRelease) {
+            def pullTitle = pull.title.replaceFirst(pullTitlePattern, pullTitleReplacement)
             def numOfPullCommits = releaseNotes.commits
                 .findAll { it.refPullRequest == pull }.size()
-            output << "  - ${pull.title} #${pull.number} " +
-                "(${plural(numOfPullCommits, "commit", "commits")})\n"
+            output << "- ${pullTitle} (#${pull.number})" +
+                " &mdash; ${plural(numOfPullCommits, "commit", "commits")}\n"
 
         }
         return output.toString()

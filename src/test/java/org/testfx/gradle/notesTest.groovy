@@ -158,4 +158,18 @@ class NotesTest {
         }
     }
 
+    @Test
+    void "formatPullRequestTitle()"() {
+        // expect:
+        assert formatPullRequestTitle("foo: bar") == "**foo:** bar"
+        assert formatPullRequestTitle("foo bar: baz") == "foo bar: baz"
+        assert formatPullRequestTitle("foo(bar): baz") == "**foo(bar):** baz"
+        assert formatPullRequestTitle("foo(bar, baz): quux") == "**foo(bar, baz):** quux"
+        assert formatPullRequestTitle("foo: bar\nbaz") == "**foo:** bar\nbaz"
+    }
+
+    private String formatPullRequestTitle(String title) {
+        return title.replaceFirst(printer.PULL_TITLE_PATTERN, printer.PULL_TITLE_REPLACEMENT)
+    }
+
 }

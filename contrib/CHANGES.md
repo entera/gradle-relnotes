@@ -7,9 +7,9 @@ _This is a bugfix release._
 - **Bob Sanders** ([@bob]()) &mdash; 1 commit
 
 4 merged pull requests:
-- **chore:** Lorem ipsum dolor sit amet, consectetur adipiscing elit ([#21]()) &mdash; 1 commit
-- **fix(Quuux):** Duis aute irure dolor in reprehenderit in voluptate ([#22]()) &mdash; 2 commits
-- **test(Quuux):** Nullam nec varius metus ([#23]()) &mdash; 1 commit
+- **chore(Quux):** Lorem ipsum dolor sit amet, consectetur adipiscing elit ([#21]()) &mdash; 1 commit
+- **fix(Quux):** Duis aute irure dolor in reprehenderit in voluptate ([#22]()) &mdash; 2 commits
+- **test:** Nullam nec varius metus ([#23]()) &mdash; 1 commit
 - Proin egestas fermentum purus, a varius ligula mollis vitae ([#24]()) &mdash; 1 commit
 
 ## v1.0.1 (January 1, 2012)
@@ -20,8 +20,8 @@ _This is a bugfix release._
 - **Carol Sanders** ([@carol]()), **Ted Henderson** ([@ted]()) &mdash; 2 commits
 
 2 merged pull requests:
-- **docs(Quux):** Praesent risus leo, dictum ([#12]()) &mdash; 2 commits
-- **refactor(Baz):** Excepteur sint occaecat cupidatat non proident ([#11]()) &mdash; 2 commits
+- **docs(Baz):** Praesent risus leo, dictum ([#12]()) &mdash; 2 commits
+- **refactor(Bar):** Excepteur sint occaecat cupidatat non proident ([#11]()) &mdash; 2 commits
 
 ## v1.0.0 (January 1, 2010)
 

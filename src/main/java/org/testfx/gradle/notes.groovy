@@ -76,6 +76,9 @@ class ReleaseNotes {
 
 class ReleaseNotesPrinter {
 
+    static final String PULL_TITLE_PATTERN = /(?s)^(\w+?:|\w+?\(.+?\):)(.+)/
+    static final String PULL_TITLE_REPLACEMENT = "**\$1**\$2"
+
     ReleaseNotes releaseNotes
 
     String generateReleaseNotes(Release release) {
@@ -89,7 +92,8 @@ class ReleaseNotesPrinter {
     }
 
     private String generateReleaseHeader(Release release) {
-        def formatter = DateTimeFormatter.ofLocalizedDate(FormatStyle.LONG).withLocale(Locale.ENGLISH)
+        def formatter = DateTimeFormatter.ofLocalizedDate(FormatStyle.LONG)
+            .withLocale(Locale.ENGLISH)
         def tagNameText = release.tagName
         def releasedAtText = release.releasedAt.format(formatter)
         return "## ${tagNameText} (${releasedAtText})\n"
@@ -103,6 +107,10 @@ class ReleaseNotesPrinter {
             .collect { it.refAuthor }
             .sort(false) { releaseCommits.findAll { it.refAuthor == it }.size() }
             .reverse()
+        def releaseAuthorsMap = releaseAuthors.groupBy { author ->
+            releaseCommits.findAll { it.refAuthor == author }.size()
+        }
+
         def numOfCommits = releaseCommits.size()
         def numOfAuthors = releaseCommits
             .unique(false) { it.authorName }.size()
@@ -110,32 +118,31 @@ class ReleaseNotesPrinter {
         def output = new StringBuilder()
         output << "${plural(numOfCommits, "commit", "commits")} by" +
             " ${plural(numOfAuthors, "author", "authors")}:\n"
-        for (author in releaseAuthors) {
-            def numOfAuthorCommits = releaseCommits
-                .findAll { it.refAuthor == author }.size()
-            output << "- **${author.name}** (@${author.login})" +
-                " &mdash; ${plural(numOfAuthorCommits, "commit", "commits")}\n"
+        releaseAuthorsMap.each { int numOfAuthorCommits, List<Author> authors ->
+            output << "- "
+            output << authors.collect { author ->
+                "**${author.name}** (@${author.login})"
+            }.join(", ")
+            output << " &mdash; ${plural(numOfAuthorCommits, "commit", "commits")}\n"
         }
         return output.toString()
     }
 
     private String generatePullList(Release release) {
-        def pullTitlePattern = "(.+?:)(.+)"
-        def pullTitleReplacement = "**\$1**\$2"
-
         def pullsInRelease = releaseNotes.pulls
             .findAll { it.refRelease == release }
-            .sort(false) { it.title.replaceFirst(pullTitlePattern, pullTitleReplacement) }
+            .sort(false) { it.title }
+            .sort(false) { !it.title.matches(PULL_TITLE_PATTERN) }
         def numOfPulls = pullsInRelease.size()
 
         def output = new StringBuilder()
         output << "${plural(numOfPulls, "merged pull request", "merged pull requests")}:\n"
         for (pull in pullsInRelease) {
-            def pullTitle = pull.title.replaceFirst(pullTitlePattern, pullTitleReplacement)
+            def pullTitle = pull.title.replaceFirst(PULL_TITLE_PATTERN, PULL_TITLE_REPLACEMENT)
             def numOfPullCommits = releaseNotes.commits
                 .findAll { it.refPullRequest == pull }.size()
-            output << "- ${pullTitle} (#${pull.number})" +
-                " &mdash; ${plural(numOfPullCommits, "commit", "commits")}\n"
+            output << "- ${pullTitle} (#${pull.number})"
+            output << " &mdash; ${plural(numOfPullCommits, "commit", "commits")}\n"
 
         }
         return output.toString()

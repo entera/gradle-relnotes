@@ -1,17 +1,20 @@
 package com.github.entera.gradle.relnotes
 
+import com.github.entera.gradle.relnotes.task.ReleaseNotesTask
 import org.gradle.api.Plugin
 import org.gradle.api.Project
 import org.gradle.api.plugins.JavaPlugin
 import org.gradle.api.tasks.SourceSetContainer
 
-class RelnotesPlugin implements Plugin<Project> {
+class ReleaseNotesPlugin implements Plugin<Project> {
 
     //---------------------------------------------------------------------------------------------
     // CONSTANTS.
     //---------------------------------------------------------------------------------------------
 
-    static final String RELNOTES_CONFIG = "relnotes"
+    static final String RELNOTES_CONFIG = "releaseNotes"
+
+    static final String RELNOTES_TASK = "releaseNotes"
 
     //---------------------------------------------------------------------------------------------
     // PRIVATE FIELDS.
@@ -19,6 +22,8 @@ class RelnotesPlugin implements Plugin<Project> {
 
     private Project project
     private SourceSetContainer sourceSets
+
+    private ReleaseNotesTask releaseNotesTask
 
     //---------------------------------------------------------------------------------------------
     // METHODS.
@@ -31,6 +36,34 @@ class RelnotesPlugin implements Plugin<Project> {
         this.project.plugins.apply(JavaPlugin)
         this.sourceSets = this.project.sourceSets
 
+        this.registerExtensions()
+        this.registerTasks()
+
+        this.project.afterEvaluate {
+            this.configureTasks()
+        }
+    }
+
+    //---------------------------------------------------------------------------------------------
+    // PRIVATE METHODS.
+    //---------------------------------------------------------------------------------------------
+
+    private void registerExtensions() {
+        this.project.extensions.create(RELNOTES_CONFIG, ReleaseNotesConfig)
+    }
+
+    private void registerTasks() {
+        this.releaseNotesTask = this.project.task(
+            type: ReleaseNotesTask, RELNOTES_TASK
+        ) as ReleaseNotesTask
+    }
+
+    private void configureTasks() {
+        def relnotesConfig = this.project.extensions.getByName(RELNOTES_CONFIG) as ReleaseNotesConfig
+
+        this.project.configure(this.releaseNotesTask) {
+            println relnotesConfig
+        }
     }
 
 }

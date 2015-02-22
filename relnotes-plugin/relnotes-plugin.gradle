@@ -10,7 +10,7 @@ dependencies {
     compile gradleApi()
 
     // groovy compiler and libs.
-    compile "org.codehaus.groovy:groovy-all:2.4.0"
+    //compile "org.codehaus.groovy:groovy-all:2.4.0"
 
     // junit test framework and hamcrest matchers.
     testCompile("junit:junit:4.12") {

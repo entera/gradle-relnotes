@@ -1,45 +1,7 @@
 package org.testfx.gradle
 
-import java.time.ZonedDateTime
 import java.time.format.DateTimeFormatter
 import java.time.format.FormatStyle
-import javax.annotation.Nullable
-import groovy.transform.Canonical
-import groovy.transform.ToString
-
-@Canonical
-@ToString(includePackage = false, ignoreNulls = true)
-class Release {
-    String tagName
-    ZonedDateTime releasedAt
-}
-
-@Canonical
-@ToString(includePackage = false, ignoreNulls = true)
-class PullRequest {
-    String number
-    String title
-    ZonedDateTime mergedAt
-    Release refRelease
-}
-
-@Canonical
-@ToString(includePackage = false, ignoreNulls = true)
-class Commit {
-    String pullNumber
-    @Nullable String authorLogin
-    String authorName
-    String message
-    PullRequest refPullRequest
-    Author refAuthor
-}
-
-@Canonical
-@ToString(includePackage = false, ignoreNulls = true)
-class Author {
-    @Nullable String login
-    String name
-}
 
 class ReleaseNotes {
 
@@ -72,6 +34,7 @@ class ReleaseNotes {
             commit.refAuthor = authorRefs[commit.authorLogin]
         }
     }
+
 }
 
 class ReleaseNotesPrinter {
@@ -120,9 +83,10 @@ class ReleaseNotesPrinter {
             " ${plural(numOfAuthors, "author", "authors")}:\n"
         releaseAuthorsMap.each { int numOfAuthorCommits, List<Author> authors ->
             output << "- "
-            output << authors.collect { author ->
-                "**${author.name}** (@${author.login})"
-            }.join(", ")
+            output << authors.asImmutable()
+                .sort(false) { it.name }
+                .collect { author -> "**${author.name}** (@${author.login})"}
+                .join(", ")
             output << " &mdash; ${plural(numOfAuthorCommits, "commit", "commits")}\n"
         }
         return output.toString()

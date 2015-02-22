@@ -1,12 +1,15 @@
 package org.testfx.gradle
 
+import java.time.format.DateTimeFormatter
+import java.time.format.FormatStyle
+
 import org.junit.Before
 import org.junit.Test
 
 import static java.time.ZonedDateTime.now
 import static java.time.ZonedDateTime.parse
 
-class NotesTest {
+class ReleaseNotesTest {
 
     List<Release> releases
     List<PullRequest> pulls
@@ -16,8 +19,33 @@ class NotesTest {
     ReleaseNotes releaseNotes
     ReleaseNotesPrinter printer
 
+    final DateTimeFormatter formatter = DateTimeFormatter
+        .ofLocalizedDate(FormatStyle.LONG)
+        .withLocale(Locale.ENGLISH)
+
     final String printedNotes0 = """
-        ## v1.0.2-SNAPSHOT (December 19, 2014)
+        ## v1.0.0 (January 1, 2010)
+
+        3 commits by 1 author:
+        - **Alice Henderson** (@alice) &mdash; 3 commits
+
+        1 merged pull request:
+        - **feat(Foo):** ... (#1) &mdash; 3 commits
+    """.stripIndent().trim() + "\n"
+
+    final String printedNotes1 = """
+        ## v1.0.1 (March 23, 2012)
+
+        4 commits by 2 authors:
+        - **Carol Sanders** (@carol), **Ted Henderson** (@ted) &mdash; 2 commits
+
+        2 merged pull requests:
+        - **docs(Baz):** ... (#12) &mdash; 2 commits
+        - **refactor(Bar):** ... (#11) &mdash; 2 commits
+    """.stripIndent().trim() + "\n"
+
+    final String printedNotes2 = """
+        ## v1.0.2-SNAPSHOT (${now().format(formatter)})
 
         5 commits by 2 authors:
         - **Alice Henderson** (@alice) &mdash; 4 commits
@@ -28,28 +56,6 @@ class NotesTest {
         - **fix(Quux):** ... (#22) &mdash; 2 commits
         - **test:** ... (#23) &mdash; 1 commit
         - ... (#24) &mdash; 1 commit
-    """.stripIndent().trim() + "\n"
-
-    final String printedNotes1 = """
-        ## v1.0.1 (March 23, 2012)
-
-        4 commits by 2 authors:
-        - **Carol Sanders** (@carol) &mdash; 2 commits
-        - **Ted Henderson** (@ted) &mdash; 2 commits
-
-        2 merged pull requests:
-        - **docs(Baz):** ... (#12) &mdash; 2 commits
-        - **refactor(Bar):** ... (#11) &mdash; 2 commits
-    """.stripIndent().trim() + "\n"
-
-    final String printedNotes2 = """
-        ## v1.0.0 (January 1, 2010)
-
-        3 commits by 1 author:
-        - **Alice Henderson** (@alice) &mdash; 3 commits
-
-        1 merged pull request:
-        - **feat(Foo):** ... (#1) &mdash; 3 commits
     """.stripIndent().trim() + "\n"
 
     @Before
@@ -152,7 +158,16 @@ class NotesTest {
         releaseNotes.assignPullRequestsToCommits()
         releaseNotes.assignCommitsToAuthors()
 
-        // expect:
+        // when:
+        def generatedNotes0 = printer.generateReleaseNotes(releases[0])
+        def generatedNotes1 = printer.generateReleaseNotes(releases[1])
+        def generatedNotes2 = printer.generateReleaseNotes(releases[2])
+
+        // then:
+        assert generatedNotes0 == printedNotes0
+        assert generatedNotes1 == printedNotes1
+        assert generatedNotes2 == printedNotes2
+
         releaseNotes.releases.reverse().each { rel ->
             println printer.generateReleaseNotes(rel)
         }

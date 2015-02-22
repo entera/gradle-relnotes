@@ -2,7 +2,7 @@
 rootProject.name = "gradle-relnotes"
 
 // list of subprojects.
-include "github-relnotes-plugin"
+include "relnotes-plugin"
 
 // build files of subprojects.
 rootProject.children.each { project ->

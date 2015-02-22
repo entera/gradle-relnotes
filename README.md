@@ -1,3 +1,21 @@
+# gradle-relnotes
+
+Gradle plugins for release notes.
+
+
+## Status
+
+This project was started on December 10, 2014 and is not ready for production, yet. :smiley_cat:
+
+
+## Usage
+
+TBD.
+
+
+## License
+
+~~~
 Copyright 2014-2015 Benjamin Gudehus <hastebrot@gmail.com>
 
 Licensed under the EUPL, Version 1.1 or - as soon they will be approved by the
@@ -11,3 +29,4 @@ Unless required by applicable law or agreed to in writing, software distributed
 under the Licence is distributed on an "AS IS" basis, WITHOUT WARRANTIES OR
 CONDITIONS OF ANY KIND, either express or implied. See the Licence for the
 specific language governing permissions and limitations under the Licence.
+~~~

@@ -1,5 +1,6 @@
-package com.github.entera.gradle.relnotes
-import com.github.entera.gradle.relnotes.task.GenerateTask
+package com.github.entera.gradle.relnotes.plugin
+
+import com.github.entera.gradle.relnotes.plugin.task.GenerateTask
 import org.gradle.api.Project
 import org.gradle.testfixtures.ProjectBuilder
 import org.junit.Before

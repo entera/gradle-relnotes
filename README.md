@@ -1,6 +1,6 @@
-# gradle-relnotes
+# gradle-relnotes [![Build Status](https://travis-ci.org/entera/gradle-relnotes.svg?branch=master)](https://travis-ci.org/entera/gradle-relnotes)
 
-Gradle plugins for release notes.
+Gradle plugins for release notes (https://github.com/entera/gradle-relnotes).
 
 
 ## Status

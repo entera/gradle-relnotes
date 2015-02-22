@@ -6,6 +6,9 @@ repositories {
 }
 
 dependencies {
+    // provide the gradle api.
+    compile gradleApi()
+
     // groovy compiler and libs.
     compile "org.codehaus.groovy:groovy-all:2.4.0"
 

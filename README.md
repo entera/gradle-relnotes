@@ -5,7 +5,7 @@ Gradle plugins for release notes. &mdash; https://github.com/entera/gradle-relno
 
 ## Status
 
-This project was started on December 10, 2014 and is not ready for production, yet. :smiley_cat:
+This project was started on *December 10, 2014* and is not ready for production, yet. :smiley_cat:
 
 
 ## Usage

@@ -1,20 +1,19 @@
 package com.github.entera.gradle.relnotes
 
-import com.github.entera.gradle.relnotes.task.ReleaseNotesTask
-import org.gradle.api.Plugin
+import com.github.entera.gradle.relnotes.task.GenerateTask
 import org.gradle.api.Project
 import org.gradle.api.plugins.JavaPlugin
 import org.gradle.api.tasks.SourceSetContainer
 
-class ReleaseNotesPlugin implements Plugin<Project> {
+class Plugin implements org.gradle.api.Plugin<Project> {
 
     //---------------------------------------------------------------------------------------------
     // CONSTANTS.
     //---------------------------------------------------------------------------------------------
 
-    static final String RELNOTES_CONFIG = "releaseNotes"
+    static final String CONFIG_NAME = "releaseNotes"
 
-    static final String RELNOTES_TASK = "releaseNotes"
+    static final String GENERATE_TASK = "generateReleaseNotes"
 
     //---------------------------------------------------------------------------------------------
     // PRIVATE FIELDS.
@@ -23,7 +22,7 @@ class ReleaseNotesPlugin implements Plugin<Project> {
     private Project project
     private SourceSetContainer sourceSets
 
-    private ReleaseNotesTask releaseNotesTask
+    private GenerateTask generateTask
 
     //---------------------------------------------------------------------------------------------
     // METHODS.
@@ -49,20 +48,21 @@ class ReleaseNotesPlugin implements Plugin<Project> {
     //---------------------------------------------------------------------------------------------
 
     private void registerExtensions() {
-        this.project.extensions.create(RELNOTES_CONFIG, ReleaseNotesConfig)
+        this.project.extensions.create(CONFIG_NAME, Config)
     }
 
     private void registerTasks() {
-        this.releaseNotesTask = this.project.task(
-            type: ReleaseNotesTask, RELNOTES_TASK
-        ) as ReleaseNotesTask
+        this.generateTask = this.project.task(
+            type: GenerateTask, GENERATE_TASK,
+            group: "release"
+        ) as GenerateTask
     }
 
     private void configureTasks() {
-        def relnotesConfig = this.project.extensions.getByName(RELNOTES_CONFIG) as ReleaseNotesConfig
+        def config = this.project.extensions.getByName(CONFIG_NAME) as Config
 
-        this.project.configure(this.releaseNotesTask) {
-            println relnotesConfig
+        this.project.configure(this.generateTask) {
+            println config
         }
     }
 

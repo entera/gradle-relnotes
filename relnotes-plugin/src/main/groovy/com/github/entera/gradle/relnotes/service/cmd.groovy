@@ -1,4 +1,5 @@
 package com.github.entera.gradle.relnotes.service
+
 import java.lang.ProcessBuilder.Redirect
 
 class CommandRunner {

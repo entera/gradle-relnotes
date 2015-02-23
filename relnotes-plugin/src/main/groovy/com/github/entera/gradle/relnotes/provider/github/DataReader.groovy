@@ -8,6 +8,30 @@ import static java.time.ZonedDateTime.parse
 
 class DataReader {
 
+    Commit commit(Object data) {
+        data.with {
+            def commit = new Commit(
+                authorLogin: it.author.login, // sometimes undefined
+                authorName: it.commit.author.name,
+                message: it.commit.message,
+            )
+            return commit
+        }
+    }
+
+    List<Commit> commits(Object data) {
+        def commits = []
+        data.each {
+            def commit = new Commit(
+                authorLogin: it.author.login, // sometimes undefined
+                authorName: it.commit.author.name,
+                message: it.commit.message,
+            )
+            commits << commit
+        }
+        return commits
+    }
+
     List<PullRequest> pulls(Object data) {
         def pulls = []
         data.each {

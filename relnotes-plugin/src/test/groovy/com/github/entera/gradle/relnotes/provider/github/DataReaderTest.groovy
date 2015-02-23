@@ -22,6 +22,34 @@ class DataReaderTest {
     }
 
     @Test
+    void "commit"() {
+        // given:
+        def data = loadJsonFixture("res/github_response/commit_get_a_single_commit.json")
+
+        // when:
+        def commit = dataReader.commit(data)
+
+        // then:
+        assertThat(commit, Matchers.is(
+            new Commit(null, "Fix all the bugs", "Monalisa Octocat", null, "octocat")
+        ))
+    }
+
+    @Test
+    void "commits"() {
+        // given:
+        def data = loadJsonFixture("res/github_response/commit_list_commits_on_a_repository.json")
+
+        // when:
+        def commits = dataReader.commits(data)
+
+        // then:
+        assertThat(commits, Matchers.contains(
+            new Commit(null, "Fix all the bugs", "Monalisa Octocat", null, "octocat")
+        ))
+    }
+
+    @Test
     void "pulls"() {
         // given:
         def data = loadJsonFixture("res/github_response/pulls_list_pull_requests.json")

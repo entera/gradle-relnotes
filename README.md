@@ -5,12 +5,27 @@ Gradle plugins for release notes. &mdash; https://github.com/entera/gradle-relno
 
 ## Status
 
-This project was started on *December 10, 2014* and is not ready for production, yet. :smiley_cat:
+This project was started on **December 10, 2014** and is **not ready for production**, yet. :smiley_cat:
+
+
+## Features
+
+_TBD._
 
 
 ## Usage
 
-TBD.
+_TBD._
+
+
+## Motivation
+
+_TBD._
+
+
+## Contribute
+
+_TBD._
 
 
 ## License
@@ -30,3 +45,4 @@ under the Licence is distributed on an "AS IS" basis, WITHOUT WARRANTIES OR
 CONDITIONS OF ANY KIND, either express or implied. See the Licence for the
 specific language governing permissions and limitations under the Licence.
 ~~~
+.

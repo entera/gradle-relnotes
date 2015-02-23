@@ -1,4 +1,6 @@
-## v1.0.2-SNAPSHOT (December 20, 2014)
+<!-- v1.0.2-SNAPSHOT -->
+
+## v1.0.2-SNAPSHOT &mdash; December 20, 2014
 
 _This is a bugfix release._
 
@@ -12,9 +14,11 @@ _This is a bugfix release._
 - **test:** Nullam nec varius metus ([#23]()) &mdash; 1 commit
 - Proin egestas fermentum purus, a varius ligula mollis vitae ([#24]()) &mdash; 1 commit
 
-0 solved issues:
+0 closed issues:
 
-## v1.0.1 (March 23, 2012)
+<!-- v1.0.1 -->
+
+## v1.0.1 &mdash; March 23, 2012
 
 _This is a bugfix release._
 
@@ -25,9 +29,11 @@ _This is a bugfix release._
 - **docs(Baz):** Praesent risus leo, dictum ([#12]()) &mdash; 2 commits
 - **refactor(Bar):** Excepteur sint occaecat cupidatat non proident ([#11]()) &mdash; 2 commits
 
-0 solved issues:
+0 closed issues:
 
-## v1.0.0 (January 1, 2010)
+<!-- v1.0.0 -->
+
+## v1.0.0 &mdash; January 1, 2010
 
 _This is a feature release._
 
@@ -37,4 +43,4 @@ _This is a feature release._
 1 merged pull request:
 - **feat(Foo):** Sunt in culpa qui officia deserunt mollit ([#1]()) &mdash; 3 commits
 
-0 solved issues:
+0 closed issues:

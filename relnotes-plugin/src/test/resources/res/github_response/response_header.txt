@@ -1,0 +1,5 @@
+Status: 200 OK
+Link: <https://api.github.com/resource?page=2>; rel="next",
+      <https://api.github.com/resource?page=5>; rel="last"
+X-RateLimit-Limit: 5000
+X-RateLimit-Remaining: 4999

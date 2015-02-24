@@ -1,20 +1,10 @@
 package com.github.entera.gradle.relnotes.service
 
 import groovy.json.JsonSlurper
-import groovy.transform.Canonical
 
-@Canonical
-class WebapiRequest {
-    URL url
-    Map<String, String> params
-}
-
-@Canonical
-class WebapiResponse {
-    Object data
-    Map<String, String> headers
-}
-
+/**
+ * Created by benjamin on 24.02.2015.
+ */
 class WebapiClient {
     WebapiResponse json(WebapiRequest request) {
         def connection = openConnection(request)

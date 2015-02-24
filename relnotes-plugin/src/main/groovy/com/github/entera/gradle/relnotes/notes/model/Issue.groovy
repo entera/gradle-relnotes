@@ -4,9 +4,6 @@ import java.time.ZonedDateTime
 import groovy.transform.Canonical
 import groovy.transform.ToString
 
-/**
- * Created by benjamin on 24.02.2015.
- */
 @Canonical
 @ToString(includePackage = false, ignoreNulls = true)
 class Issue {

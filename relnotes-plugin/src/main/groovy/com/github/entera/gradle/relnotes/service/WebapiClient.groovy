@@ -2,9 +2,6 @@ package com.github.entera.gradle.relnotes.service
 
 import groovy.json.JsonSlurper
 
-/**
- * Created by benjamin on 24.02.2015.
- */
 class WebapiClient {
     WebapiResponse json(WebapiRequest request) {
         def connection = openConnection(request)

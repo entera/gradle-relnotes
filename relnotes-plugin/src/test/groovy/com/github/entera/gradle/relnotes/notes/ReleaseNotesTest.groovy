@@ -3,6 +3,10 @@ package com.github.entera.gradle.relnotes.notes
 import java.time.format.DateTimeFormatter
 import java.time.format.FormatStyle
 
+import com.github.entera.gradle.relnotes.notes.model.Author
+import com.github.entera.gradle.relnotes.notes.model.Commit
+import com.github.entera.gradle.relnotes.notes.model.PullRequest
+import com.github.entera.gradle.relnotes.notes.model.Release
 import org.junit.Before
 import org.junit.Test
 

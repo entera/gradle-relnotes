@@ -1,8 +1,8 @@
 package com.github.entera.gradle.relnotes.provider.github
 
-import com.github.entera.gradle.relnotes.notes.Commit
-import com.github.entera.gradle.relnotes.notes.PullRequest
-import com.github.entera.gradle.relnotes.notes.Release
+import com.github.entera.gradle.relnotes.notes.model.Commit
+import com.github.entera.gradle.relnotes.notes.model.PullRequest
+import com.github.entera.gradle.relnotes.notes.model.Release
 
 import static java.time.ZonedDateTime.parse
 
@@ -11,9 +11,12 @@ class DataReader {
     Commit commit(Object data) {
         data.with {
             def commit = new Commit(
+                sha: it.sha,
                 authorLogin: it.author.login, // sometimes undefined
                 authorName: it.commit.author.name,
+                authorEmail: it.commit.author.email,
                 message: it.commit.message,
+                committedAt: parse(it.commit.committer.date as String)
             )
             return commit
         }

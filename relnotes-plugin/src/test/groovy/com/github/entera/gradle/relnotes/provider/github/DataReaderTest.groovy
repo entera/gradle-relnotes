@@ -2,9 +2,9 @@ package com.github.entera.gradle.relnotes.provider.github
 
 import groovy.json.JsonSlurper
 
-import com.github.entera.gradle.relnotes.notes.Commit
-import com.github.entera.gradle.relnotes.notes.PullRequest
-import com.github.entera.gradle.relnotes.notes.Release
+import com.github.entera.gradle.relnotes.notes.model.Commit
+import com.github.entera.gradle.relnotes.notes.model.PullRequest
+import com.github.entera.gradle.relnotes.notes.model.Release
 import org.hamcrest.Matchers
 import org.junit.Before
 import org.junit.Test
@@ -31,7 +31,9 @@ class DataReaderTest {
 
         // then:
         assertThat(commit, Matchers.is(
-            new Commit(null, "Fix all the bugs", "Monalisa Octocat", null, "octocat")
+            new Commit("6dcb09b5b57875f334f61aebed695e2e4193db5e", "Fix all the bugs",
+                "Monalisa Octocat", "support@github.com", "octocat", null,
+                parse("2011-04-14T16:00:49Z"))
         ))
     }
 

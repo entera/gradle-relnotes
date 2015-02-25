@@ -2,6 +2,7 @@ package com.github.entera.gradle.relnotes.provider.github
 
 import groovy.json.JsonSlurper
 
+import com.github.entera.gradle.relnotes.notes.model.Author
 import com.github.entera.gradle.relnotes.notes.model.Commit
 import com.github.entera.gradle.relnotes.notes.model.PullRequest
 import com.github.entera.gradle.relnotes.notes.model.Release
@@ -13,7 +14,6 @@ import static java.time.ZonedDateTime.parse
 import static org.junit.Assert.assertThat
 
 class DataReaderTest {
-
     DataReader dataReader
 
     @Before
@@ -95,6 +95,20 @@ class DataReaderTest {
     }
 
     @Test
+    void "user()"() {
+        // given:
+        def data = loadJsonFixture("res/github_response/user_get_a_single_user.json")
+
+        // when:
+        def user = dataReader.user(data)
+
+        // then:
+        assertThat(user, Matchers.is(
+            new Author("monalisa octocat", "octocat@github.com", "octocat")
+        ))
+    }
+
+    @Test
     void "linkRels"() {
         // given:
         def data = loadTextFixture("res/github_response/response_header.txt")
@@ -116,5 +130,4 @@ class DataReaderTest {
         def inputStream = this.class.classLoader.getResourceAsStream(resourcePath)
         return new JsonSlurper().parse(inputStream)
     }
-
 }

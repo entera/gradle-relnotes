@@ -1,5 +1,6 @@
 package com.github.entera.gradle.relnotes.provider.github
 
+import com.github.entera.gradle.relnotes.notes.model.Author
 import com.github.entera.gradle.relnotes.notes.model.Commit
 import com.github.entera.gradle.relnotes.notes.model.PullRequest
 import com.github.entera.gradle.relnotes.notes.model.Release
@@ -7,7 +8,6 @@ import com.github.entera.gradle.relnotes.notes.model.Release
 import static java.time.ZonedDateTime.parse
 
 class DataReader {
-
     Release tag(Object data) {
         data.with {
             def release = new Release(
@@ -83,9 +83,19 @@ class DataReader {
         return pullCommits
     }
 
+    Author user(Object data) {
+        data.with {
+            def author = new Author(
+                login: it.login,
+                name: it.name,
+                email: it.email
+            )
+            return author
+        }
+    }
+
     Map<String, String> linkRels(String header) {
         def matcher = header =~ /(?m)<(?<url>\S+)>;\s*?rel="(?<rel>\S+)"/
         return matcher.collect { [it[2], it[1]] }.collectEntries()
     }
-
 }

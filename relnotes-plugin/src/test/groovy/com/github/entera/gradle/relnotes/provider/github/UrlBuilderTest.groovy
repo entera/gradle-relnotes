@@ -13,9 +13,9 @@ class UrlBuilderTest {
 
         // expect:
         urlBuilder.repo(":ownerRepo").resource(":entityType").params(":params")
-        assertThat(urlBuilder.toUrl(), Matchers.is(
+        assertThat urlBuilder.toUrl(), Matchers.is(
             new URL("https://api.github.com/repos/:ownerRepo/:entityType?:params")
-        ))
+        )
     }
 
     @Test
@@ -29,8 +29,19 @@ class UrlBuilderTest {
         ))
 
         // expect:
-        assertThat(urlBuilder.page(37).toUrl(), Matchers.is(
+        assertThat urlBuilder.page(37).toUrl(), Matchers.is(
             new URL("https://api.github.com/repos/:ownerRepo/:entityType?page=37")
-        ))
+        )
+    }
+
+    @Test
+    void "#resource()"() {
+        // given:
+        def urlBuilder = UrlBuilder.build().resource("users/:username")
+
+        // expect:
+        assertThat urlBuilder.toUrl(), Matchers.is(
+            new URL("https://api.github.com/users/:username")
+        )
     }
 }

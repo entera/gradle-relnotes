@@ -30,7 +30,9 @@ class UrlBuilder {
 
     URL toUrl() {
         def urlString = "https://api.github.com/"
-        urlString += "repos/${repo}/"
+        if (repo != null) {
+            urlString += "repos/${repo}/"
+        }
         urlString += "${resource}?"
         if (page != null) {
             urlString += "page=${page}&"
@@ -38,6 +40,6 @@ class UrlBuilder {
         if (params != null) {
             urlString += "${params}&"
         }
-        return urlString.minus(~/(&+)$/).toURL()
+        return urlString.minus(~/([\?&]+)$/).toURL()
     }
 }

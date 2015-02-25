@@ -22,6 +22,20 @@ class DataReaderTest {
     }
 
     @Test
+    void "tags"() {
+        // given:
+        def data = loadJsonFixture("res/github_response/tags_list_tags.json")
+
+        // when:
+        def releases = dataReader.tags(data)
+
+        // then:
+        assertThat(releases, Matchers.contains(
+            new Release("v0.1", "c5b97d5ae6c19d5c5df71a34c7fbeeda2479ccbc")
+        ))
+    }
+
+    @Test
     void "commit"() {
         // given:
         def data = loadJsonFixture("res/github_response/commit_get_a_single_commit.json")
@@ -32,8 +46,7 @@ class DataReaderTest {
         // then:
         assertThat(commit, Matchers.is(
             new Commit("6dcb09b5b57875f334f61aebed695e2e4193db5e", "Fix all the bugs",
-                "Monalisa Octocat", "support@github.com", "octocat", null,
-                parse("2011-04-14T16:00:49Z"))
+                "Monalisa Octocat", "support@github.com", "octocat", parse("2011-04-14T16:00:49Z"))
         ))
     }
 
@@ -47,7 +60,8 @@ class DataReaderTest {
 
         // then:
         assertThat(commits, Matchers.contains(
-            new Commit(null, "Fix all the bugs", "Monalisa Octocat", null, "octocat")
+            new Commit("6dcb09b5b57875f334f61aebed695e2e4193db5e", "Fix all the bugs",
+                "Monalisa Octocat", "support@github.com", "octocat", parse("2011-04-14T16:00:49Z"))
         ))
     }
 
@@ -75,22 +89,27 @@ class DataReaderTest {
 
         // then:
         assertThat(commits, Matchers.contains(
-            new Commit(null, "Fix all the bugs", "Monalisa Octocat", null, "octocat")
+            new Commit("6dcb09b5b57875f334f61aebed695e2e4193db5e", "Fix all the bugs",
+                "Monalisa Octocat", "support@github.com", "octocat", parse("2011-04-14T16:00:49Z"))
         ))
     }
 
     @Test
-    void "tags"() {
+    void "linkRels"() {
         // given:
-        def data = loadJsonFixture("res/github_response/tags_list_tags.json")
+        def data = loadTextFixture("res/github_response/response_header.txt")
 
         // when:
-        def releases = dataReader.tags(data)
+        def linkRels = dataReader.linkRels(data)
 
         // then:
-        assertThat(releases, Matchers.contains(
-            new Release("v0.1", "c5b97d5ae6c19d5c5df71a34c7fbeeda2479ccbc")
-        ))
+        assertThat(linkRels, Matchers.hasEntry("next", "https://api.github.com/resource?page=2"))
+        assertThat(linkRels, Matchers.hasEntry("last", "https://api.github.com/resource?page=5"))
+    }
+
+    private String loadTextFixture(String resourcePath) {
+        def inputStream = this.class.classLoader.getResourceAsStream(resourcePath)
+        return inputStream.getText()
     }
 
     private Object loadJsonFixture(String resourcePath) {

@@ -28,7 +28,7 @@ class ReleaseNotesTest {
         .withLocale(Locale.ENGLISH)
 
     final String printedNotes0 = """
-        ## v1.0.0 (January 1, 2010)
+        ## v1.0.0 &mdash; January 1, 2010
 
         3 commits by 1 author:
         - **Alice Henderson** (@alice) &mdash; 3 commits
@@ -38,7 +38,7 @@ class ReleaseNotesTest {
     """.stripIndent().trim() + "\n"
 
     final String printedNotes1 = """
-        ## v1.0.1 (March 23, 2012)
+        ## v1.0.1 &mdash; March 23, 2012
 
         4 commits by 2 authors:
         - **Carol Sanders** (@carol), **Ted Henderson** (@ted) &mdash; 2 commits
@@ -49,7 +49,7 @@ class ReleaseNotesTest {
     """.stripIndent().trim() + "\n"
 
     final String printedNotes2 = """
-        ## v1.0.2-SNAPSHOT (${now().format(formatter)})
+        ## v1.0.2-SNAPSHOT &mdash; ${now().format(formatter)}
 
         5 commits by 2 authors:
         - **Alice Henderson** (@alice) &mdash; 4 commits

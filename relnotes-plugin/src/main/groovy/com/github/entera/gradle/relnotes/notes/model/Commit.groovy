@@ -12,9 +12,9 @@ class Commit {
     String authorName
     String authorEmail
     String authorLogin
-    String pullNumber
     ZonedDateTime committedAt
 
+    String pullNumber
     Integer numOfParents
     Release refRelease
     PullRequest refPullRequest

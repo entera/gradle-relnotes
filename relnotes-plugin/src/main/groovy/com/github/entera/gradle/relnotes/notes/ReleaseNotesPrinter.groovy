@@ -8,7 +8,7 @@ import com.github.entera.gradle.relnotes.notes.model.Release
 
 class ReleaseNotesPrinter {
 
-    static final String PULL_TITLE_PATTERN = /(?s)^(\w+?:|\w+?\(.+?\):)(.+)/
+    static final String PULL_TITLE_PATTERN = /(?s)^(\S+?:|\S+?\(.+?\):)(.+)/
     static final String PULL_TITLE_REPLACEMENT = "**\$1**\$2"
 
     ReleaseNotes releaseNotes
@@ -28,12 +28,12 @@ class ReleaseNotesPrinter {
             .withLocale(Locale.ENGLISH)
         def tagNameText = release.tagName
         def releasedAtText = release.releasedAt.format(formatter)
-        return "## ${tagNameText} (${releasedAtText})\n"
+        return "## ${tagNameText} &mdash; ${releasedAtText}\n"
     }
 
     private String generateAuthorList(Release release) {
         def releaseCommits = releaseNotes.commits.asImmutable()
-            .findAll { it.refPullRequest.refRelease == release }
+            .findAll { it.refPullRequest?.refRelease == release }
         def releaseAuthors = releaseCommits.asImmutable()
             .unique(false) { it.refAuthor }
             .collect { it.refAuthor }

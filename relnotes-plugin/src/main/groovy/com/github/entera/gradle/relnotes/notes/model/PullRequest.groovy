@@ -1,4 +1,5 @@
 package com.github.entera.gradle.relnotes.notes.model
+
 import java.time.ZonedDateTime
 import groovy.transform.Canonical
 import groovy.transform.ToString

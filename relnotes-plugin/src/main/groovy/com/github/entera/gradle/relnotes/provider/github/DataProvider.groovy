@@ -152,6 +152,7 @@ class DataProvider {
             def pullCommitsResource = Resources.pullCommits(this.repository, pullRequest.number)
             def pullCommits = this.pullCommits(pullCommitsResource)
             pullCommits.each { it.pullNumber = pullRequest.number as String }
+            pullCommits = pullCommits.findAll { it.numOfParents == 1 }
             resultPullCommits.addAll(pullCommits)
         }
         return resultPullCommits

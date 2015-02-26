@@ -15,10 +15,11 @@ class ReleaseNotes {
     List<Commit> pullCommits
 
     void assignPullRequestMergeToCommits() {
-        // TODO: use datetime of first merged pull request (if available)
+        def pullCommitsBySha = pullCommits.groupBy { it.sha }
         for (commit in commits) {
-            def pullCommit = pullCommits.find { it.sha == commit.sha }
-            if (pullCommit) {
+            def pullCommits = pullCommitsBySha[commit.sha]
+            if (pullCommits) {
+                def pullCommit = pullCommits.sort { it.refPullRequest.mergedAt }.first()
                 commit.committedAt = pullCommit.refPullRequest.mergedAt
             }
         }

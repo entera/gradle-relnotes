@@ -3,14 +3,6 @@ package com.github.entera.gradle.relnotes.provider.github
 import java.time.ZonedDateTime
 
 class Resources {
-    static UrlBuilder compare(String repos,
-                              String base,
-                              String head) {
-        return UrlBuilder.build()
-            .repo(repos)
-            .resource("compare/${base}...${head}")
-    }
-
     static UrlBuilder tags(String repos) {
         return UrlBuilder.build()
             .repo(repos)
@@ -40,25 +32,6 @@ class Resources {
         return UrlBuilder.build()
             .repo(repos)
             .resource("commits/${sha}")
-            .params("per_page=100")
-    }
-
-    // updated_at
-
-    static UrlBuilder issues(String repos) {
-        return UrlBuilder.build()
-            .repo(repos)
-            .resource("issues")
-            .params("per_page=100&filter=all&state=all&sort=created&direction=desc")
-    }
-
-    static UrlBuilder issuesSince(String repos,
-                                  ZonedDateTime since) {
-        // TODO: stop pagination at "since"
-        return UrlBuilder.build()
-            .repo(repos)
-            .resource("issues")
-            .params("per_page=100&filter=all&state=all&sort=updated&direction=desc&since=date")
     }
 
     static UrlBuilder pulls(String repos) {
@@ -85,8 +58,32 @@ class Resources {
             .params("per_page=100")
     }
 
+    static UrlBuilder issues(String repos) {
+        return UrlBuilder.build()
+            .repo(repos)
+            .resource("issues")
+            .params("per_page=100&filter=all&state=all&sort=created&direction=desc")
+    }
+
+    static UrlBuilder issuesSince(String repos,
+                                  ZonedDateTime since) {
+        // TODO: stop pagination at "since"
+        return UrlBuilder.build()
+            .repo(repos)
+            .resource("issues")
+            .params("per_page=100&filter=all&state=all&sort=updated&direction=desc&since=date")
+    }
+
     static UrlBuilder user(String username) {
         return UrlBuilder.build()
             .resource("users/${username}")
+    }
+
+    static UrlBuilder compare(String repos,
+                              String base,
+                              String head) {
+        return UrlBuilder.build()
+            .repo(repos)
+            .resource("compare/${base}...${head}")
     }
 }

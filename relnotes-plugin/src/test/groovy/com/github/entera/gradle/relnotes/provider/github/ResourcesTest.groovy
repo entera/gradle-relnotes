@@ -29,7 +29,7 @@ class ResourcesTest {
         // expect:
         def resource = Resources.commit("testfx/testfx", "1234abc")
         assertThat resource.toUrl().toString(), Matchers.is(
-            "https://api.github.com/repos/testfx/testfx/commits/1234abc?per_page=100"
+            "https://api.github.com/repos/testfx/testfx/commits/1234abc"
         )
     }
 

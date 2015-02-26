@@ -2,8 +2,10 @@ package com.github.entera.gradle.relnotes.adapter.git
 
 import com.github.entera.gradle.relnotes.service.CommandRunner
 import org.junit.Before
+import org.junit.Ignore
 import org.junit.Test
 
+@Ignore
 class GitDataProviderTest {
     CommandRunner cmdRunner
     GitCommands gitCommands

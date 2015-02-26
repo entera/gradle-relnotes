@@ -3,12 +3,12 @@ package com.github.entera.gradle.relnotes.provider.github
 import java.time.ZoneId
 import java.time.ZonedDateTime
 
-import com.github.entera.gradle.relnotes.notes.ReleaseNotes
-import com.github.entera.gradle.relnotes.notes.ReleaseNotesPrinter
-import com.github.entera.gradle.relnotes.notes.model.Author
-import com.github.entera.gradle.relnotes.notes.model.Commit
-import com.github.entera.gradle.relnotes.notes.model.PullRequest
-import com.github.entera.gradle.relnotes.notes.model.Release
+import com.github.entera.gradle.relnotes.model.ReleaseNotes
+import com.github.entera.gradle.relnotes.model.Author
+import com.github.entera.gradle.relnotes.model.Commit
+import com.github.entera.gradle.relnotes.model.PullRequest
+import com.github.entera.gradle.relnotes.model.Release
+import com.github.entera.gradle.relnotes.printer.ReleaseNotesPrinter
 import com.github.entera.gradle.relnotes.service.WebapiClient
 import com.github.entera.gradle.relnotes.service.WebapiRequest
 import com.github.entera.gradle.relnotes.service.WebapiResponse
@@ -53,11 +53,11 @@ class DataProvider {
         def printer = new ReleaseNotesPrinter(baseUrl: baseUrl, repositoryUrl: repositoryUrl)
         printer.releaseNotes = releaseNotes
 
-        releaseNotes.assignReleasesToPullRequests()
-        releaseNotes.assignPullRequestsToPullCommits()
-        releaseNotes.assignPullRequestMergeToCommits()
-        releaseNotes.assignReleasesToCommits()
-        releaseNotes.assignCommitsToAuthors()
+        printer.assignReleasesToPullRequests()
+        printer.assignPullRequestsToPullCommits()
+        printer.assignPullRequestMergeToCommits()
+        printer.assignReleasesToCommits()
+        printer.assignCommitsToAuthors()
 
         for (release in releases) {
             println printer.generateReleaseNotes(release)

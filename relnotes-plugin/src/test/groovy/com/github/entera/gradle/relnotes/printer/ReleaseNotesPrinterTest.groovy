@@ -1,11 +1,13 @@
-package com.github.entera.gradle.relnotes.notes
+package com.github.entera.gradle.relnotes.printer
+
 import java.time.format.DateTimeFormatter
 import java.time.format.FormatStyle
 
-import com.github.entera.gradle.relnotes.notes.model.Author
-import com.github.entera.gradle.relnotes.notes.model.Commit
-import com.github.entera.gradle.relnotes.notes.model.PullRequest
-import com.github.entera.gradle.relnotes.notes.model.Release
+import com.github.entera.gradle.relnotes.model.Author
+import com.github.entera.gradle.relnotes.model.Commit
+import com.github.entera.gradle.relnotes.model.PullRequest
+import com.github.entera.gradle.relnotes.model.Release
+import com.github.entera.gradle.relnotes.model.ReleaseNotes
 import org.hamcrest.Matchers
 import org.junit.Before
 import org.junit.Test

@@ -1,4 +1,4 @@
-package com.github.entera.gradle.relnotes.notes.model
+package com.github.entera.gradle.relnotes.model
 
 import groovy.transform.Canonical
 import groovy.transform.ToString

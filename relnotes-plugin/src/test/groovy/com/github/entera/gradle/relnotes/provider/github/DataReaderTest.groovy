@@ -2,10 +2,10 @@ package com.github.entera.gradle.relnotes.provider.github
 
 import groovy.json.JsonSlurper
 
-import com.github.entera.gradle.relnotes.notes.model.Author
-import com.github.entera.gradle.relnotes.notes.model.Commit
-import com.github.entera.gradle.relnotes.notes.model.PullRequest
-import com.github.entera.gradle.relnotes.notes.model.Release
+import com.github.entera.gradle.relnotes.model.Author
+import com.github.entera.gradle.relnotes.model.Commit
+import com.github.entera.gradle.relnotes.model.PullRequest
+import com.github.entera.gradle.relnotes.model.Release
 import org.hamcrest.Matchers
 import org.junit.Before
 import org.junit.Test

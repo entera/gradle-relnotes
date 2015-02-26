@@ -1,11 +1,12 @@
-package com.github.entera.gradle.relnotes.notes
+package com.github.entera.gradle.relnotes.printer
 
 import java.time.format.DateTimeFormatter
 import java.time.format.FormatStyle
 
-import com.github.entera.gradle.relnotes.notes.model.Author
-import com.github.entera.gradle.relnotes.notes.model.PullRequest
-import com.github.entera.gradle.relnotes.notes.model.Release
+import com.github.entera.gradle.relnotes.model.Author
+import com.github.entera.gradle.relnotes.model.PullRequest
+import com.github.entera.gradle.relnotes.model.Release
+import com.github.entera.gradle.relnotes.model.ReleaseNotes
 
 class ReleaseNotesPrinter {
     static final String PULL_TITLE_PATTERN = /(?s)^(\w+?:|\w+?\(.+?\):|\(\w+?\))(.+)/

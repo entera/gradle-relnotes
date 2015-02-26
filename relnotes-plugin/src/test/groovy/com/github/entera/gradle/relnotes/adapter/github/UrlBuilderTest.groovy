@@ -1,4 +1,4 @@
-package com.github.entera.gradle.relnotes.provider.github
+package com.github.entera.gradle.relnotes.adapter.github
 
 import org.hamcrest.Matchers
 import org.junit.Test

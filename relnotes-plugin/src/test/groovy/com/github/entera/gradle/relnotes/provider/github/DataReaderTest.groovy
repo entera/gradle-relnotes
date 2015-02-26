@@ -22,7 +22,7 @@ class DataReaderTest {
     }
 
     @Test
-    void "tags"() {
+    void "read tags"() {
         // given:
         def data = loadJsonFixture("res/github_response/tags_list_tags.json")
 
@@ -36,7 +36,7 @@ class DataReaderTest {
     }
 
     @Test
-    void "commit"() {
+    void "read commit"() {
         // given:
         def data = loadJsonFixture("res/github_response/commit_get_a_single_commit.json")
 
@@ -52,7 +52,7 @@ class DataReaderTest {
     }
 
     @Test
-    void "commits"() {
+    void "read commits"() {
         // given:
         def data = loadJsonFixture("res/github_response/commit_list_commits_on_a_repository.json")
 
@@ -68,7 +68,7 @@ class DataReaderTest {
     }
 
     @Test
-    void "pulls"() {
+    void "read pulls"() {
         // given:
         def data = loadJsonFixture("res/github_response/pulls_list_pull_requests.json")
 
@@ -82,7 +82,7 @@ class DataReaderTest {
     }
 
     @Test
-    void "pullCommits"() {
+    void "read pullCommits"() {
         // given:
         def data = loadJsonFixture("res/github_response/pulls_list_commits_on_a_pull_request.json")
 
@@ -98,7 +98,7 @@ class DataReaderTest {
     }
 
     @Test
-    void "user()"() {
+    void "read user"() {
         // given:
         def data = loadJsonFixture("res/github_response/user_get_a_single_user.json")
 
@@ -112,7 +112,7 @@ class DataReaderTest {
     }
 
     @Test
-    void "linkRels"() {
+    void "read linkRels"() {
         // given:
         def data = loadTextFixture("res/github_response/response_header.txt")
 

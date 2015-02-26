@@ -76,10 +76,8 @@ class DataReader {
     List<Commit> pullCommits(Object data) {
         def pullCommits = []
         data.each {
-            if (it.parents.size() <= 1) {
-                def commit = commit(it)
-                pullCommits << commit
-            }
+            def commit = commit(it)
+            pullCommits << commit
         }
         return pullCommits
     }

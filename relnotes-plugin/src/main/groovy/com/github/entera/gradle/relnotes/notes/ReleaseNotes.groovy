@@ -6,26 +6,30 @@ import com.github.entera.gradle.relnotes.notes.model.PullRequest
 import com.github.entera.gradle.relnotes.notes.model.Release
 
 class ReleaseNotes {
-
     List<Release> releases
-    List<PullRequest> pulls
+
     List<Commit> commits
     List<Author> authors
 
-    void assignReleasesToPullRequests() {
-        def releases = releases.asImmutable()
-            .sort(false) { rel -> rel.releasedAt }
-        pulls.each { pull ->
-            pull.refRelease = releases
-                .find { rel -> pull.mergedAt <= rel.releasedAt }
+    List<PullRequest> pullRequests
+    List<Commit> pullCommits
+
+    void assignPullRequestMergeToCommits() {
+        // TODO: use datetime of first merged pull request (if available)
+        for (commit in commits) {
+            def pullCommit = pullCommits.find { it.sha == commit.sha }
+            if (pullCommit) {
+                commit.committedAt = pullCommit.refPullRequest.mergedAt
+            }
         }
     }
 
-    void assignPullRequestsToCommits() {
-        Map<String, PullRequest> pullRefs = pulls
-            .collectEntries { pull -> [pull.number, pull] }
+    void assignReleasesToCommits() {
+        def releases = releases.asImmutable()
+            .sort(false) { rel -> rel.releasedAt }
         commits.each { commit ->
-            commit.refPullRequest = pullRefs[commit.pullNumber]
+            commit.refRelease = releases
+                .find { rel -> commit.committedAt <= rel.releasedAt }
         }
     }
 
@@ -37,4 +41,20 @@ class ReleaseNotes {
         }
     }
 
+    void assignReleasesToPullRequests() {
+        def releases = releases.asImmutable()
+            .sort(false) { rel -> rel.releasedAt }
+        pullRequests.each { pull ->
+            pull.refRelease = releases
+                .find { rel -> pull.mergedAt <= rel.releasedAt }
+        }
+    }
+
+    void assignPullRequestsToPullCommits() {
+        Map<String, PullRequest> pullRefs = pullRequests
+            .collectEntries { pull -> [pull.number, pull] }
+        pullCommits.each { commit ->
+            commit.refPullRequest = pullRefs[commit.pullNumber]
+        }
+    }
 }

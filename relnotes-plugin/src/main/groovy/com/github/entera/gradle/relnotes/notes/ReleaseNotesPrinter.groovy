@@ -7,10 +7,11 @@ import com.github.entera.gradle.relnotes.notes.model.Author
 import com.github.entera.gradle.relnotes.notes.model.Release
 
 class ReleaseNotesPrinter {
-
-    static final String PULL_TITLE_PATTERN = /(?s)^(\S+?:|\S+?\(.+?\):)(.+)/
+    static final String PULL_TITLE_PATTERN = /(?s)^(\w+?:|\w+?\(.+?\):|\(\w+?\))(.+)/
     static final String PULL_TITLE_REPLACEMENT = "**\$1**\$2"
 
+    String baseUrl
+    String repositoryUrl
     ReleaseNotes releaseNotes
 
     String generateReleaseNotes(Release release) {
@@ -33,7 +34,7 @@ class ReleaseNotesPrinter {
 
     private String generateAuthorList(Release release) {
         def releaseCommits = releaseNotes.commits.asImmutable()
-            .findAll { it.refPullRequest?.refRelease == release }
+            .findAll { it.refRelease == release }
         def releaseAuthors = releaseCommits.asImmutable()
             .unique(false) { it.refAuthor }
             .collect { it.refAuthor }
@@ -41,7 +42,7 @@ class ReleaseNotesPrinter {
             .reverse()
         def releaseAuthorsMap = releaseAuthors.groupBy { author ->
             releaseCommits.findAll { it.refAuthor == author }.size()
-        }
+        }.sort { numOfCommits0, numOfCommits1 -> numOfCommits1.key <=> numOfCommits0.key }
 
         def numOfCommits = releaseCommits.size()
         def numOfAuthors = releaseCommits
@@ -54,7 +55,18 @@ class ReleaseNotesPrinter {
             output << "- "
             output << authors.asImmutable()
                 .sort(false) { it.name }
-                .collect { author -> "**${author.name}** (@${author.login})"}
+                .collect { author ->
+                    if (baseUrl) {
+                        author.login ?
+                            "**${author.name}** ([@${author.login}](${baseUrl}/${author.login}))" :
+                            "**${author.name}**"
+                    }
+                    else {
+                        author.login ?
+                            "**${author.name}** (@${author.login})" :
+                            "**${author.name}**"
+                    }
+                }
                 .join(", ")
             output << " &mdash; ${plural(numOfAuthorCommits, "commit", "commits")}\n"
         }
@@ -62,7 +74,7 @@ class ReleaseNotesPrinter {
     }
 
     private String generatePullList(Release release) {
-        def pullsInRelease = releaseNotes.pulls
+        def pullsInRelease = releaseNotes.pullRequests
             .findAll { it.refRelease == release }
             .sort(false) { it.title }
             .sort(false) { !it.title.matches(PULL_TITLE_PATTERN) }
@@ -72,9 +84,15 @@ class ReleaseNotesPrinter {
         output << "${plural(numOfPulls, "merged pull request", "merged pull requests")}:\n"
         for (pull in pullsInRelease) {
             def pullTitle = pull.title.replaceFirst(PULL_TITLE_PATTERN, PULL_TITLE_REPLACEMENT)
-            def numOfPullCommits = releaseNotes.commits
+            def numOfPullCommits = releaseNotes.pullCommits
                 .findAll { it.refPullRequest == pull }.size()
-            output << "- ${pullTitle} (#${pull.number})"
+            if (repositoryUrl) {
+                output << "- ${pullTitle} ([#${pull.number}](${repositoryUrl}/pull/${pull.number}))"
+            }
+            else {
+                output << "- ${pullTitle} (#${pull.number})"
+            }
+
             output << " &mdash; ${plural(numOfPullCommits, "commit", "commits")}\n"
 
         }
@@ -86,7 +104,6 @@ class ReleaseNotesPrinter {
                           String plural) {
         return "" + count + " " + (count == 1 ? singular : plural)
     }
-
 }
 
 //class ReleaseNotesTemplate {

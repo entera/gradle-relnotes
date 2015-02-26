@@ -14,8 +14,9 @@ class Commit {
     String authorLogin
     ZonedDateTime committedAt
 
-    String pullNumber
     Integer numOfParents
+    String pullNumber
+
     Release refRelease
     PullRequest refPullRequest
     Author refAuthor

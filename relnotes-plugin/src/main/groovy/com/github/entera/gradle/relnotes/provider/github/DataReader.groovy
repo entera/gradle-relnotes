@@ -35,7 +35,8 @@ class DataReader {
                 authorName: it.commit.author.name,
                 authorEmail: it.commit.author.email,
                 message: it.commit.message,
-                committedAt: parse(it.commit.committer.date as String)
+                committedAt: parse(it.commit.committer.date as String),
+                numOfParents: it.parents.size()
             )
             return commit
         }

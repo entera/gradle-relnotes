@@ -46,7 +46,8 @@ class DataReaderTest {
         // then:
         assertThat(commit, Matchers.is(
             new Commit("6dcb09b5b57875f334f61aebed695e2e4193db5e", "Fix all the bugs",
-                "Monalisa Octocat", "support@github.com", "octocat", parse("2011-04-14T16:00:49Z"))
+                "Monalisa Octocat", "support@github.com", "octocat",
+                parse("2011-04-14T16:00:49Z"), 1)
         ))
     }
 
@@ -61,7 +62,8 @@ class DataReaderTest {
         // then:
         assertThat(commits, Matchers.contains(
             new Commit("6dcb09b5b57875f334f61aebed695e2e4193db5e", "Fix all the bugs",
-                "Monalisa Octocat", "support@github.com", "octocat", parse("2011-04-14T16:00:49Z"))
+                "Monalisa Octocat", "support@github.com", "octocat",
+                parse("2011-04-14T16:00:49Z"), 1)
         ))
     }
 
@@ -90,7 +92,8 @@ class DataReaderTest {
         // then:
         assertThat(commits, Matchers.contains(
             new Commit("6dcb09b5b57875f334f61aebed695e2e4193db5e", "Fix all the bugs",
-                "Monalisa Octocat", "support@github.com", "octocat", parse("2011-04-14T16:00:49Z"))
+                "Monalisa Octocat", "support@github.com", "octocat",
+                parse("2011-04-14T16:00:49Z"), 1)
         ))
     }
 

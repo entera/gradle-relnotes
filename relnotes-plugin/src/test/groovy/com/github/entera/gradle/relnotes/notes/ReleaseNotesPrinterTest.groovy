@@ -1,5 +1,4 @@
 package com.github.entera.gradle.relnotes.notes
-
 import java.time.format.DateTimeFormatter
 import java.time.format.FormatStyle
 
@@ -7,11 +6,13 @@ import com.github.entera.gradle.relnotes.notes.model.Author
 import com.github.entera.gradle.relnotes.notes.model.Commit
 import com.github.entera.gradle.relnotes.notes.model.PullRequest
 import com.github.entera.gradle.relnotes.notes.model.Release
+import org.hamcrest.Matchers
 import org.junit.Before
 import org.junit.Test
 
 import static java.time.ZonedDateTime.now
 import static java.time.ZonedDateTime.parse
+import static org.junit.Assert.assertThat
 
 class ReleaseNotesPrinterTest {
     List<Release> releases
@@ -114,9 +115,55 @@ class ReleaseNotesPrinterTest {
     }
 
     @Test
-    void "assignReleasesToPullRequests()"() {
+    void "should assign pull request merge to commits with no commits"() {
+        // given:
+        def releaseNotes = new ReleaseNotes()
+        releaseNotes.commits = []
+        releaseNotes.pullCommits = []
+
         // when:
-        releaseNotes.assignReleasesToPullRequests()
+        printer.releaseNotes = releaseNotes
+        printer.assignPullRequestMergeToCommits()
+
+        // then:
+        assertThat releaseNotes.commits, Matchers.empty()
+        assertThat releaseNotes.pullCommits, Matchers.empty()
+    }
+
+    @Test
+    void "should assign pull request merge to commits with commits"() {
+        // given:
+        def releaseNotes = new ReleaseNotes()
+        releaseNotes.commits = [
+            new Commit(sha: "1", committedAt: parse("2010-01-01T00:00Z")),
+            new Commit(sha: "2", committedAt: parse("2010-01-01T00:00Z")),
+            new Commit(sha: "3", committedAt: parse("2010-01-01T00:00Z"))
+        ]
+        releaseNotes.pullCommits = [
+            new Commit(sha: "1",
+                refPullRequest: new PullRequest(mergedAt: parse("2010-10-12T00:00Z"))),
+            new Commit(sha: "2",
+                refPullRequest: new PullRequest(mergedAt: parse("2010-11-12T00:00Z"))),
+            new Commit(sha: "3",
+                refPullRequest: new PullRequest(mergedAt: parse("2010-12-12T00:00Z")))
+        ]
+
+        // when:
+        printer.releaseNotes = releaseNotes
+        printer.assignPullRequestMergeToCommits()
+
+        // then:
+        assertThat releaseNotes.commits, Matchers.contains(
+            new Commit(sha: "1", committedAt: parse("2010-10-12T00:00Z")),
+            new Commit(sha: "2", committedAt: parse("2010-11-12T00:00Z")),
+            new Commit(sha: "3", committedAt: parse("2010-12-12T00:00Z"))
+        )
+    }
+
+    @Test
+    void "should assign releases to pull requests"() {
+        // when:
+        printer.assignReleasesToPullRequests()
 
         // then:
         assert pulls.find { it.number == "1" }.refRelease.tagName == "v1.0.0"
@@ -127,9 +174,9 @@ class ReleaseNotesPrinterTest {
     }
 
     @Test
-    void "assignPullRequestsToCommits()"() {
+    void "should assign pull requests to commits"() {
         // when:
-        releaseNotes.assignPullRequestsToPullCommits()
+        printer.assignPullRequestsToPullCommits()
 
         // then:
         assert commits[0].refPullRequest == pulls[0]
@@ -142,9 +189,9 @@ class ReleaseNotesPrinterTest {
     }
 
     @Test
-    void "assignCommitsToAuthors()"() {
+    void "should assign commits to authors"() {
         // when:
-        releaseNotes.assignCommitsToAuthors()
+        printer.assignCommitsToAuthors()
 
         // then:
         assert commits[0].refAuthor == authors[0]
@@ -157,13 +204,13 @@ class ReleaseNotesPrinterTest {
     }
 
     @Test
-    void "generateReleaseNotes()"() {
+    void "should generate release notes"() {
         // given:
-        releaseNotes.assignReleasesToPullRequests()
-        releaseNotes.assignPullRequestsToPullCommits()
-        releaseNotes.assignPullRequestMergeToCommits()
-        releaseNotes.assignReleasesToCommits()
-        releaseNotes.assignCommitsToAuthors()
+        printer.assignReleasesToPullRequests()
+        printer.assignPullRequestsToPullCommits()
+        printer.assignPullRequestMergeToCommits()
+        printer.assignReleasesToCommits()
+        printer.assignCommitsToAuthors()
 
         // when:
         def generatedNotes0 = printer.generateReleaseNotes(releases[0])
@@ -181,7 +228,7 @@ class ReleaseNotesPrinterTest {
     }
 
     @Test
-    void "formatPullRequestTitle()"() {
+    void "should format pull request title"() {
         // expect:
         assert formatPullRequestTitle("foo: bar") == "**foo:** bar"
         assert formatPullRequestTitle("foo bar: baz") == "foo bar: baz"

@@ -4,6 +4,7 @@ import java.time.format.DateTimeFormatter
 import java.time.format.FormatStyle
 
 import com.github.entera.gradle.relnotes.notes.model.Author
+import com.github.entera.gradle.relnotes.notes.model.PullRequest
 import com.github.entera.gradle.relnotes.notes.model.Release
 
 class ReleaseNotesPrinter {
@@ -13,6 +14,51 @@ class ReleaseNotesPrinter {
     String baseUrl
     String repositoryUrl
     ReleaseNotes releaseNotes
+
+    void assignPullRequestMergeToCommits() {
+        def pullCommitsBySha = releaseNotes.pullCommits.groupBy { it.sha }
+        for (commit in releaseNotes.commits) {
+            def pullCommits = pullCommitsBySha[commit.sha]
+            if (pullCommits) {
+                def pullCommit = pullCommits.sort { it.refPullRequest.mergedAt }.first()
+                commit.committedAt = pullCommit.refPullRequest.mergedAt
+            }
+        }
+    }
+
+    void assignReleasesToCommits() {
+        def releases = releaseNotes.releases.asImmutable()
+            .sort(false) { rel -> rel.releasedAt }
+        releaseNotes.commits.each { commit ->
+            commit.refRelease = releases
+                .find { rel -> commit.committedAt <= rel.releasedAt }
+        }
+    }
+
+    void assignCommitsToAuthors() {
+        Map<String, Author> authorRefs = releaseNotes.authors
+            .collectEntries { author -> [author.login, author] }
+        releaseNotes.commits.each { commit ->
+            commit.refAuthor = authorRefs[commit.authorLogin]
+        }
+    }
+
+    void assignReleasesToPullRequests() {
+        def releases = releaseNotes.releases.asImmutable()
+            .sort(false) { rel -> rel.releasedAt }
+        releaseNotes.pullRequests.each { pull ->
+            pull.refRelease = releases
+                .find { rel -> pull.mergedAt <= rel.releasedAt }
+        }
+    }
+
+    void assignPullRequestsToPullCommits() {
+        Map<String, PullRequest> pullRefs = releaseNotes.pullRequests
+            .collectEntries { pull -> [pull.number, pull] }
+        releaseNotes.pullCommits.each { commit ->
+            commit.refPullRequest = pullRefs[commit.pullNumber]
+        }
+    }
 
     String generateReleaseNotes(Release release) {
         def output = new StringBuilder()

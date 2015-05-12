@@ -1,6 +1,6 @@
 // list of subprojects.
 include "gradle-relnotes-plugin"
-include "gradle-relnotes-plugin-demo"
+//include "gradle-relnotes-plugin-demo"
 
 // build files of subprojects.
 rootProject.children.each { project ->

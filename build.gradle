@@ -63,8 +63,8 @@ project(":") { project ->
 //
 //    // configure release notes generator.
 //    releaseNotes {
-//        authToken null
-//        repository "entera/gradle-relnotes"
+//        authToken project.githubKey
+//        repository project.githubRepo
 //    }
 }
 

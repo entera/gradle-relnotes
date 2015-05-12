@@ -1,17 +1,60 @@
-// task to add gradle wrapper files.
-task wrapper(type: Wrapper) {
-    gradleVersion = "2.3"
+//-------------------------------------------------------------------------------------------------
+// GRADLE PLUGINS.
+//-------------------------------------------------------------------------------------------------
+
+plugins {
+    // use the bintray gradle plugin to upload build artifacts.
+    id "com.jfrog.bintray" version "1.2"
 }
 
-// task to print gradle and groovy versions.
-task printVersions << {
-    println "Gradle version: " + project.gradle.gradleVersion
-    println "Groovy version: " + GroovySystem.version
+//-------------------------------------------------------------------------------------------------
+// ROOT PROJECT.
+//-------------------------------------------------------------------------------------------------
+
+// only our subprojects have a bintray configuration. replace the root project's `bintrayUpload`
+// task with one that restricts the calls to the subprojects.
+project.afterEvaluate {
+    task bintrayUpload(group: "publishing", overwrite: true) {
+        dependsOn subprojects.bintrayUpload
+    }
 }
+
+project(":") { project ->
+    // provide assemble and clean tasks.
+    apply plugin: "base"
+
+    // task to add gradle wrapper files.
+    task wrapper(type: Wrapper, group: "build setup") {
+        gradleVersion = project.gradleVersion
+    }
+
+    // task to print gradle and groovy versions.
+    task versions(group: "help") << {
+        println "Java version: ${System.getProperty("java.version")}"
+        println "Gradle version: ${project.gradle.gradleVersion}"
+        println "Groovy version: ${GroovySystem.version}"
+    }
+
+    ext {
+        // add build time and date to project attributes.
+        def buildTimeAndDate = new Date()
+        buildDate = buildTimeAndDate.format("yyyy-MM-dd")
+        buildTime = buildTimeAndDate.format("HH:mm:ss.SSSZ")
+
+        // add java version and vendor to project attributes.
+        javaVersion = System.properties["java.version"]
+        javaVendor = System.properties["java.vendor"]
+        javaVmVersion = System.properties["java.vm.version"]
+    }
+}
+
+//-------------------------------------------------------------------------------------------------
+// EACH PROJECT.
+//-------------------------------------------------------------------------------------------------
 
 allprojects { project ->
     // task to create main and test source directories.
-    task createSourceDirs << {
+    task sourceDirs(group: "build setup") << {
         if (project != rootProject) {
             sourceSets*.allSource.srcDirs*.each { it.mkdirs() }
             sourceSets*.resources.srcDirs*.each { it.mkdirs() }
@@ -19,30 +62,73 @@ allprojects { project ->
     }
 }
 
-subprojects {
-    // provide java configurations and tasks.
-    apply plugin: "java"
+//-------------------------------------------------------------------------------------------------
+// EACH SUBPROJECT.
+//-------------------------------------------------------------------------------------------------
 
-    // source code compatible to java 8.
-    sourceCompatibility = 1.8
-    targetCompatibility = 1.8
+subprojects { project ->
+    // provide java and groovy configurations and tasks.
+    apply plugin: "java"
+    apply plugin: "groovy"
 
     // maven repositories for dependencies.
     repositories {
         if (project.hasProperty("useMavenLocal")) {
             mavenLocal()
         }
-        jcenter()
     }
 
-    // task to print configuration names.
-    task printConfigNames << {
-        for (configuration in configurations) {
-            println configuration.name
-        }
+    // source code compatible to java 8.
+    sourceCompatibility = 1.8
+    targetCompatibility = 1.8
+
+    // configure publish tasks.
+    apply from: rootProject.file("gradle/publish.gradle")
+
+    // task to create jar with source code.
+    task sourceJar(type: Jar) {
+        group "Build"
+        description "An archive of the source code"
+        classifier "sources"
+        //from sourceSets.main.allJava
+        from sourceSets.main.allGroovy
     }
 
-    // configure javadoc task.
+    // task to create jar with javadocs.
+    task javadocJar(type: Jar) {
+        group "Build"
+        description "An archive of the javadoc"
+        classifier "javadoc"
+        //from javadoc
+        from groovydoc
+    }
+
+    jar.finalizedBy sourceJar
+    jar.finalizedBy javadocJar
+
+    artifacts {
+        archives jar
+        archives sourceJar
+        archives javadocJar
+    }
+
+    // configure jar task to include manifest attributes.
+    jar {
+        manifest.attributes(
+            "Created-By": project.javaVersion +
+                " (" + project.javaVendor + " " + project.javaVmVersion + ")",
+            "Build-Date": project.buildDate,
+            "Build-Time": project.buildTime,
+            "Specification-Title": project.name,
+            "Specification-Version": project.version,
+            "Specification-Vendor": project.vendor,
+            "Implementation-Title": project.name,
+            "Implementation-Version": project.version,
+            "Implementation-Vendor": project.vendor
+        )
+    }
+
+    // configure javadoc task for java 8.
     javadoc {
         options.addStringOption("Xdoclint:none", "-quiet")
     }

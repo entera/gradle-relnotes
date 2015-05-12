@@ -15,15 +15,30 @@ import de.entera.gradle.relnotes.service.WebapiResponse
 
 class DataProvider {
     static void main(String[] args) {
-        def authToken = args.size() > 0 ? args[0] : null
-        if (authToken == null) {
-            def properties = fetchProperties()
-            authToken = properties.getProperty("githubAuthToken")
-        }
+        def properties = fetchProperties()
+        def authToken = properties.getProperty("githubAuthToken")
 
-        def baseUrl = "https://github.com"
-        def repository = "TestFX/TestFX"
-        def repositoryUrl = "https://github.com/TestFX/TestFX"
+        def releaseNotesConfig = new ReleaseNotesConfig(
+            authToken: authToken,
+            repository: "entera/gradle-relnotes"
+        )
+        printReleaseNotes(releaseNotesConfig)
+    }
+
+    static class ReleaseNotesConfig {
+        String authToken
+        String repository
+    }
+
+    static final String GITHUB_ROOT_URL = "https://github.com"
+    static final String GITHUB_API_ROOT_URL = "https://api.github.com"
+
+    static void printReleaseNotes(ReleaseNotesConfig config) {
+        def authToken = config.authToken
+        def repository = config.repository
+
+        def githubUrl = GITHUB_ROOT_URL
+        def repositoryUrl = githubUrl + "/" + repository
 
         def service = new ServiceHandler(
             authToken: authToken
@@ -50,7 +65,7 @@ class DataProvider {
         releaseNotes.pullRequests = pullRequests
         releaseNotes.pullCommits = pullCommits
 
-        def printer = new ReleaseNotesPrinter(baseUrl: baseUrl, repositoryUrl: repositoryUrl)
+        def printer = new ReleaseNotesPrinter(baseUrl: githubUrl, repositoryUrl: repositoryUrl)
         printer.releaseNotes = releaseNotes
 
         printer.assignReleasesToPullRequests()

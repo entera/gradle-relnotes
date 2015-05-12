@@ -54,7 +54,7 @@ class Plugin implements org.gradle.api.Plugin<Project> {
     private void registerTasks() {
         this.generateTask = this.project.task(
             type: GenerateTask, GENERATE_TASK,
-            group: "release"
+            group: "publishing"
         ) as GenerateTask
     }
 
@@ -62,7 +62,8 @@ class Plugin implements org.gradle.api.Plugin<Project> {
         def config = this.project.extensions.getByName(CONFIG_NAME) as Config
 
         this.project.configure(this.generateTask) {
-            println config
+            this.generateTask.authToken = config.authToken
+            this.generateTask.repository = config.repository
         }
     }
 

@@ -1,4 +1,4 @@
-# gradle-relnotes [![Build Status](https://travis-ci.org/entera/gradle-relnotes.svg?branch=master)](https://travis-ci.org/entera/gradle-relnotes)
+# gradle-relnotes
 
 Gradle plugins for release notes. &mdash; https://github.com/entera/gradle-relnotes
 
@@ -6,6 +6,14 @@ Gradle plugins for release notes. &mdash; https://github.com/entera/gradle-relno
 ## Status
 
 This project was started on **December 10, 2014** and is **not ready for production**, yet. :smiley_cat:
+
+[![](https://img.shields.io/travis/entera/gradle-relnotes/master.svg?label=travis)][Travis CI]
+[![](https://img.shields.io/maven-central/v/de.entera/gradle-relnotes-plugin.svg?label=bintray)][Bintray JCenter]
+[![](https://img.shields.io/maven-central/v/de.entera/gradle-relnotes-plugin.svg?label=maven)][Maven Central]
+
+[Travis CI]: https://travis-ci.org/entera/gradle-relnotes "Travis CI"
+[Bintray JCenter]: https://bintray.com/entera/gradle-relnotes "Bintray JCenter"
+[Maven Central]: https://search.maven.org/#search|ga|1|de.entera+gradle-relnotes-plugin "Maven Central"
 
 
 ## Features
@@ -15,7 +23,28 @@ _TBD._
 
 ## Usage
 
-_TBD._
+`build.gradle`:
+
+~~~groovy
+// use the gradle relnotes plugin to generate release notes.
+buildscript {
+    repositories {
+        jcenter()
+    }
+    dependencies {
+        classpath "de.entera:gradle-relnotes-plugin:0.1.0"
+    }
+}
+
+// provide generateReleaseNotes task.
+apply plugin: "de.entera.relnotes"
+
+// configure generateReleaseNotes task.
+releaseNotes {
+    authToken null
+    repository "entera/gradle-relnotes"
+}
+~~~
 
 
 ## Motivation

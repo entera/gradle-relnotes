@@ -1,8 +1,21 @@
+# use java support.
 language: java
-script: ./gradlew clean build
-
 jdk:
-- oraclejdk8
+  - oraclejdk8
 
+# run in container und keep gradle cache.
+sudo: false
+cache:
+  directories:
+    - $HOME/.gradle
+
+# run on xvfb screen.
 before_install:
-- chmod +x gradlew
+  - chmod +x gradlew
+
+# skip install stage.
+install: true
+
+# run gradle build.
+script:
+  - ./gradlew build

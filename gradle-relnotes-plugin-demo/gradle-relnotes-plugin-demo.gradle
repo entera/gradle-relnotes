@@ -1,0 +1,14 @@
+buildscript {
+    repositories {
+        mavenLocal()
+        jcenter()
+    }
+
+    dependencies {
+        classpath "de.entera:gradle-relnotes-plugin:0.1.0"
+    }
+}
+
+apply plugin: "de.entera.relnotes"
+
+releaseNotes {}

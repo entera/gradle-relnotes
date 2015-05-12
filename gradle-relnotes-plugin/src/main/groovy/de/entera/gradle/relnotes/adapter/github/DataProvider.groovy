@@ -15,21 +15,39 @@ import de.entera.gradle.relnotes.service.WebapiResponse
 
 class DataProvider {
     static void main(String[] args) {
-        def authToken = args.size() > 0 ? args[0] : null
-        if (authToken == null) {
-            def properties = fetchProperties()
-            authToken = properties.getProperty("githubAuthToken")
-        }
+        def properties = fetchProperties()
+        def authToken = properties.getProperty("githubAuthToken")
 
-        def baseUrl = "https://github.com"
-        def repository = "TestFX/TestFX"
-        def repositoryUrl = "https://github.com/TestFX/TestFX"
+        def releaseNotesConfig = new ReleaseNotesConfig(
+            githubKey: authToken,
+            githubRepo: "entera/gradle-relnotes",
+            targetFile: new File("CHANGES.md")
+        )
+        printReleaseNotes(releaseNotesConfig)
+    }
+
+    static class ReleaseNotesConfig {
+        String githubKey
+        String githubRepo
+        File targetFile
+    }
+
+    static final String GITHUB_ROOT_URL = "https://github.com"
+    static final String GITHUB_API_ROOT_URL = "https://api.github.com"
+
+    static void printReleaseNotes(ReleaseNotesConfig config) {
+        def githubKey = config.githubKey
+        def githubRepo = config.githubRepo
+        def targetFile = config.targetFile
+
+        def githubUrl = GITHUB_ROOT_URL
+        def repositoryUrl = githubUrl + "/" + githubRepo
 
         def service = new ServiceHandler(
-            authToken: authToken
+            authToken: githubKey
         )
         def provider = new DataProvider(
-            service: service, reader: new DataReader(), repository: repository
+            service: service, reader: new DataReader(), repository: githubRepo
         )
 
         def releases = provider.fetchReleases()
@@ -50,7 +68,7 @@ class DataProvider {
         releaseNotes.pullRequests = pullRequests
         releaseNotes.pullCommits = pullCommits
 
-        def printer = new ReleaseNotesPrinter(baseUrl: baseUrl, repositoryUrl: repositoryUrl)
+        def printer = new ReleaseNotesPrinter(baseUrl: githubUrl, repositoryUrl: repositoryUrl)
         printer.releaseNotes = releaseNotes
 
         printer.assignReleasesToPullRequests()
@@ -59,9 +77,14 @@ class DataProvider {
         printer.assignReleasesToCommits()
         printer.assignCommitsToAuthors()
 
+        def outputBuilder = new StringBuilder()
         for (release in releases) {
-            println printer.generateReleaseNotes(release)
+            outputBuilder.append(printer.generateReleaseNotes(release) + "\n")
         }
+        def outputText = outputBuilder.toString().trim() + "\n"
+
+        println "output: ${targetFile.absolutePath}"
+        targetFile.setText(outputText, "UTF-8")
 
         //def formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd'T'hh:mm:ss'Z'")
         //def dateTime = ZonedDateTime.now(ZoneId.of("Z")).minusDays(30)

@@ -2,8 +2,6 @@ package de.entera.gradle.relnotes.plugin
 
 import de.entera.gradle.relnotes.plugin.task.GenerateTask
 import org.gradle.api.Project
-import org.gradle.api.plugins.JavaPlugin
-import org.gradle.api.tasks.SourceSetContainer
 
 class Plugin implements org.gradle.api.Plugin<Project> {
 
@@ -20,7 +18,6 @@ class Plugin implements org.gradle.api.Plugin<Project> {
     //---------------------------------------------------------------------------------------------
 
     private Project project
-    private SourceSetContainer sourceSets
 
     private GenerateTask generateTask
 
@@ -30,10 +27,6 @@ class Plugin implements org.gradle.api.Plugin<Project> {
 
     void apply(Project project) {
         this.project = project
-
-        // Apply JavaPlugin to ensure that the source sets container and jar task are available.
-        this.project.plugins.apply(JavaPlugin)
-        this.sourceSets = this.project.sourceSets
 
         this.registerExtensions()
         this.registerTasks()
@@ -62,8 +55,9 @@ class Plugin implements org.gradle.api.Plugin<Project> {
         def config = this.project.extensions.getByName(CONFIG_NAME) as Config
 
         this.project.configure(this.generateTask) {
-            this.generateTask.authToken = config.authToken
-            this.generateTask.repository = config.repository
+            this.generateTask.githubKey = config.githubKey
+            this.generateTask.githubRepo = config.githubRepo
+            this.generateTask.targetFile = config.targetFile
         }
     }
 

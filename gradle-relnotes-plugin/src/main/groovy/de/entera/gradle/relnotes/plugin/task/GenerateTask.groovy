@@ -3,6 +3,7 @@ package de.entera.gradle.relnotes.plugin.task
 import de.entera.gradle.relnotes.adapter.github.DataProvider
 import de.entera.gradle.relnotes.adapter.github.DataProvider.ReleaseNotesConfig
 import org.gradle.api.internal.ConventionTask
+import org.gradle.api.tasks.OutputFile
 import org.gradle.api.tasks.TaskAction
 
 class GenerateTask extends ConventionTask {
@@ -11,9 +12,12 @@ class GenerateTask extends ConventionTask {
     // FIELDS.
     //---------------------------------------------------------------------------------------------
 
-    String authToken
+    String githubKey
 
-    String repository
+    String githubRepo
+
+    @OutputFile
+    File targetFile
 
     //---------------------------------------------------------------------------------------------
     // METHODS.
@@ -22,8 +26,9 @@ class GenerateTask extends ConventionTask {
     @TaskAction
     void generate() {
         def releaseNotesConfig = new ReleaseNotesConfig(
-            authToken: this.authToken,
-            repository: this.repository,
+            githubKey: this.githubKey,
+            githubRepo: this.githubRepo,
+            targetFile: this.targetFile
         )
         DataProvider.printReleaseNotes(releaseNotesConfig)
     }

@@ -19,32 +19,35 @@ class DataProvider {
         def authToken = properties.getProperty("githubAuthToken")
 
         def releaseNotesConfig = new ReleaseNotesConfig(
-            authToken: authToken,
-            repository: "entera/gradle-relnotes"
+            githubKey: authToken,
+            githubRepo: "entera/gradle-relnotes",
+            targetFile: new File("CHANGES.md")
         )
         printReleaseNotes(releaseNotesConfig)
     }
 
     static class ReleaseNotesConfig {
-        String authToken
-        String repository
+        String githubKey
+        String githubRepo
+        File targetFile
     }
 
     static final String GITHUB_ROOT_URL = "https://github.com"
     static final String GITHUB_API_ROOT_URL = "https://api.github.com"
 
     static void printReleaseNotes(ReleaseNotesConfig config) {
-        def authToken = config.authToken
-        def repository = config.repository
+        def githubKey = config.githubKey
+        def githubRepo = config.githubRepo
+        def targetFile = config.targetFile
 
         def githubUrl = GITHUB_ROOT_URL
-        def repositoryUrl = githubUrl + "/" + repository
+        def repositoryUrl = githubUrl + "/" + githubRepo
 
         def service = new ServiceHandler(
-            authToken: authToken
+            authToken: githubKey
         )
         def provider = new DataProvider(
-            service: service, reader: new DataReader(), repository: repository
+            service: service, reader: new DataReader(), repository: githubRepo
         )
 
         def releases = provider.fetchReleases()
@@ -74,9 +77,14 @@ class DataProvider {
         printer.assignReleasesToCommits()
         printer.assignCommitsToAuthors()
 
+        def outputBuilder = new StringBuilder()
         for (release in releases) {
-            println printer.generateReleaseNotes(release)
+            outputBuilder.append(printer.generateReleaseNotes(release) + "\n")
         }
+        def outputText = outputBuilder.toString().trim() + "\n"
+
+        println "output: ${targetFile.absolutePath}"
+        targetFile.setText(outputText, "UTF-8")
 
         //def formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd'T'hh:mm:ss'Z'")
         //def dateTime = ZonedDateTime.now(ZoneId.of("Z")).minusDays(30)

@@ -1,7 +1,9 @@
 package de.entera.gradle.relnotes.plugin
 
 class Config {
-    String authToken
+    String githubKey
 
-    String repository
+    String githubRepo
+
+    File targetFile
 }

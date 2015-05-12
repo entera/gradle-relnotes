@@ -63,8 +63,9 @@ project(":") { project ->
 //
 //    // configure release notes generator.
 //    releaseNotes {
-//        authToken project.githubKey
-//        repository project.githubRepo
+//        githubKey project.githubKey
+//        githubRepo project.githubRepo
+//        targetFile file(project.changesFile)
 //    }
 }
 

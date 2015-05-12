@@ -41,8 +41,9 @@ apply plugin: "de.entera.relnotes"
 
 // configure generateReleaseNotes task.
 releaseNotes {
-    authToken null
-    repository "entera/gradle-relnotes"
+    githubKey null
+    githubRepo "entera/gradle-relnotes"
+    targetFile file("CHANGES.md")
 }
 ~~~
 

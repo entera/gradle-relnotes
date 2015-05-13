@@ -9,13 +9,6 @@ dependencies {
 
     // groovy compiler and libs.
     //compile "org.codehaus.groovy:groovy-all:2.4.0"
-
-    // code annotations.
-    compile "com.google.code.findbugs:jsr305:3.0.0"
-
-    // apache logger.
-    compile "org.apache.logging.log4j:log4j-api:2.1"
-    compile "org.apache.logging.log4j:log4j-core:2.1"
 }
 
 // test source dependencies.

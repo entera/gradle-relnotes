@@ -15,11 +15,11 @@ import de.entera.gradle.relnotes.service.WebapiResponse
 
 class DataProvider {
     static void main(String[] args) {
-        def properties = fetchProperties()
-        def authToken = properties.getProperty("githubAuthToken")
+        def properties = loadProperties(new File("gradle.properties"))
+        def githubKey = properties.getProperty("githubKey")
 
         def releaseNotesConfig = new ReleaseNotesConfig(
-            githubKey: authToken,
+            githubKey: githubKey,
             githubRepo: "entera/gradle-relnotes",
             targetFile: new File("CHANGES.md")
         )
@@ -91,8 +91,7 @@ class DataProvider {
         //def since = dateTime.format(formatter)
     }
 
-    static Properties fetchProperties() {
-        def propertiesFile = new File("auth.properties")
+    static Properties loadProperties(File propertiesFile) {
         def properties = new Properties()
         properties.load(propertiesFile.newReader())
         return properties

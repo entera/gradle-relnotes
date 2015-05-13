@@ -14,13 +14,25 @@
 //}
 
 plugins {
-    // use the bintray gradle plugin to upload build artifacts.
+    // upload build artifacts to bintray and maven central.
     id "com.jfrog.bintray" version "1.2"
+
+    // publish plugins to the gradle plugin portal.
+    id "com.gradle.plugin-publish" version "0.9.0"
 }
 
 //-------------------------------------------------------------------------------------------------
 // ROOT PROJECT.
 //-------------------------------------------------------------------------------------------------
+
+println """\
+Welcome to Gradle $gradle.gradleVersion with Java ${System.properties["java.version"]}.
+
+- Script file is "${relativePath(buildFile)}".
+- Base directory is "$projectDir".
+- Gradle home directory is "$gradle.gradleHomeDir".
+- Gradle user directory is "$gradle.gradleUserHomeDir".
+"""
 
 // only our subprojects have a bintray configuration. replace the root project's `bintrayUpload`
 // task with one that restricts the calls to the subprojects.
@@ -41,7 +53,7 @@ project(":") { project ->
 
     // task to print gradle and groovy versions.
     task versions(group: "help") << {
-        println "Java version: ${System.getProperty("java.version")}"
+        println "Java version: ${System.properties["java.version"]}"
         println "Gradle version: ${project.gradle.gradleVersion}"
         println "Groovy version: ${GroovySystem.version}"
     }

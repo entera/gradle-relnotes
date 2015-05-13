@@ -3,8 +3,8 @@ apply plugin: "com.jfrog.bintray"
 
 def pomConfig = {
     name project.name
-    url project.url
     description project.description
+    url project.url
 
     licenses {
         license([:]) {
@@ -14,12 +14,12 @@ def pomConfig = {
         }
     }
 
-    scm {
-        url project.sourceUrl
-    }
-
     developers {
         developer { name project.vendor }
+    }
+
+    scm {
+        url project.sourceUrl
     }
 }
 
@@ -51,7 +51,7 @@ bintray {
         desc = project.description
 
         licenses = [project.licenseNameShort]
-        labels = ["gradle"]
+        labels = ["gradle", "release-notes", "release", "repository"]
 
         websiteUrl = project.url
         issueTrackerUrl = project.issuesUrl
@@ -73,4 +73,25 @@ bintray {
             }
         }
     }
+}
+
+pluginBundle {
+    website = project.url
+    vcsUrl = project.sourceUrl
+
+    plugins {
+        relnotesPlugin {
+            id = "de.entera.relnotes"
+            displayName = "Relnotes Plugin for Gradle"
+            description = "Generates release notes from code repository data."
+            tags = ["release-notes", "release", "repository"]
+            version = project.version
+        }
+    }
+
+    //mavenCoordinates {
+    //    groupId = project.group
+    //    artifactId = "gradle-relnotes-plugin"
+    //    version = project.version
+    //}
 }

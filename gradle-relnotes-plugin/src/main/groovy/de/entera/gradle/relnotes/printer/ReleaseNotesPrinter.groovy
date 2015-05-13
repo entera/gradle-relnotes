@@ -76,7 +76,10 @@ class ReleaseNotesPrinter {
             .withLocale(Locale.ENGLISH)
         def tagNameText = release.tagName
         def releasedAtText = release.releasedAt.format(formatter)
-        return "## ${tagNameText} &mdash; ${releasedAtText}\n"
+        def output = new StringBuilder()
+        output << "<!-- tag: ${tagNameText} -->\n"
+        output << "## ${tagNameText} &mdash; ${releasedAtText}\n"
+        return output.toString()
     }
 
     private String generateAuthorList(Release release) {

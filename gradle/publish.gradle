@@ -1,5 +1,6 @@
 apply plugin: "maven-publish"
 apply plugin: "com.jfrog.bintray"
+apply plugin: "com.gradle.plugin-publish"
 
 def pomConfig = {
     name project.name
@@ -88,10 +89,4 @@ pluginBundle {
             version = project.version
         }
     }
-
-    //mavenCoordinates {
-    //    groupId = project.group
-    //    artifactId = "gradle-relnotes-plugin"
-    //    version = project.version
-    //}
 }

@@ -7,9 +7,13 @@ buildscript {
         if (project.hasProperty("useMavenLocal")) {
             mavenLocal()
         }
-        jcenter()
+        maven { url "https://plugins.gradle.org/m2/" }
     }
     dependencies {
+        // publish plugins to the gradle plugin portal.
+        classpath "com.gradle.publish:plugin-publish-plugin:0.9.0"
+
+        // use the gradle relnotes plugin to generate release notes.
         classpath "de.entera:gradle-relnotes-plugin:0.1.0"
     }
 }
@@ -17,9 +21,6 @@ buildscript {
 plugins {
     // upload build artifacts to bintray and maven central.
     id "com.jfrog.bintray" version "1.2"
-
-    // publish plugins to the gradle plugin portal.
-    id "com.gradle.plugin-publish" version "0.9.0"
 }
 
 //-------------------------------------------------------------------------------------------------
@@ -90,9 +91,6 @@ allprojects { project ->
             sourceSets*.resources.srcDirs*.each { it.mkdirs() }
         }
     }
-
-    // use the gradle publishing plugin.
-    apply plugin: "com.gradle.plugin-publish"
 }
 
 //-------------------------------------------------------------------------------------------------

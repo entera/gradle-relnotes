@@ -2,16 +2,17 @@
 // GRADLE PLUGINS.
 //-------------------------------------------------------------------------------------------------
 
-//buildscript {
-//    repositories {
-//        mavenLocal()
-//        jcenter()
-//    }
-//
-//    dependencies {
-//        classpath "de.entera:gradle-relnotes-plugin:0.1.0"
-//    }
-//}
+buildscript {
+    repositories {
+        if (project.hasProperty("useMavenLocal")) {
+            mavenLocal()
+        }
+        jcenter()
+    }
+    dependencies {
+        classpath "de.entera:gradle-relnotes-plugin:0.1.0"
+    }
+}
 
 plugins {
     // upload build artifacts to bintray and maven central.
@@ -25,14 +26,8 @@ plugins {
 // ROOT PROJECT.
 //-------------------------------------------------------------------------------------------------
 
-println """\
-Welcome to Gradle $gradle.gradleVersion with Java ${System.properties["java.version"]}.
-
-- Script file is "${relativePath(buildFile)}".
-- Base directory is "$projectDir".
-- Gradle home directory is "$gradle.gradleHomeDir".
-- Gradle user directory is "$gradle.gradleUserHomeDir".
-"""
+// print welcome message.
+apply from: rootProject.file("gradle/welcome.gradle")
 
 // only our subprojects have a bintray configuration. replace the root project's `bintrayUpload`
 // task with one that restricts the calls to the subprojects.
@@ -70,15 +65,17 @@ project(":") { project ->
         javaVmVersion = System.properties["java.vm.version"]
     }
 
-//    // provide release notes task.
-//    apply plugin: "de.entera.relnotes"
-//
-//    // configure release notes generator.
-//    releaseNotes {
-//        githubKey project.githubKey
-//        githubRepo project.githubRepo
-//        targetFile file(project.changesFile)
-//    }
+    // provide release notes task.
+    apply plugin: "de.entera.relnotes"
+
+    // configure release notes generator.
+    releaseNotes {
+        targetFile rootProject.file(project.changesFile)
+        githubRepo project.githubRepo
+        if (project.hasProperty("githubKey")) {
+            githubKey project.githubKey
+        }
+    }
 }
 
 //-------------------------------------------------------------------------------------------------
@@ -93,6 +90,9 @@ allprojects { project ->
             sourceSets*.resources.srcDirs*.each { it.mkdirs() }
         }
     }
+
+    // use the gradle publishing plugin.
+    apply plugin: "com.gradle.plugin-publish"
 }
 
 //-------------------------------------------------------------------------------------------------

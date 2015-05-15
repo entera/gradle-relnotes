@@ -15,6 +15,8 @@ This project was started on **December 10, 2014** and is **not ready for product
 [Bintray JCenter]: https://bintray.com/entera/gradle-relnotes "Bintray JCenter"
 [Maven Central]: https://search.maven.org/#search|ga|1|de.entera+gradle-relnotes-plugin "Maven Central"
 
+Gradle plugin page: https://plugins.gradle.org/plugin/de.entera.relnotes
+
 
 ## Features
 
@@ -23,15 +25,16 @@ _TBD._
 
 ## Usage
 
-`build.gradle`:
+**Example 1: `build.gradle`**
 
 ~~~groovy
-// use the gradle relnotes plugin to generate release notes.
+
 buildscript {
     repositories {
         jcenter()
     }
     dependencies {
+        // use the gradle relnotes plugin to generate release notes.
         classpath "de.entera:gradle-relnotes-plugin:0.1.0"
     }
 }
@@ -41,9 +44,9 @@ apply plugin: "de.entera.relnotes"
 
 // configure generateReleaseNotes task.
 releaseNotes {
-    githubKey null
+    targetFile rootProject.file("CHANGES.md")
     githubRepo "entera/gradle-relnotes"
-    targetFile file("CHANGES.md")
+    githubKey "GITHUB_KEY"
 }
 ~~~
 
@@ -75,4 +78,3 @@ under the Licence is distributed on an "AS IS" basis, WITHOUT WARRANTIES OR
 CONDITIONS OF ANY KIND, either express or implied. See the Licence for the
 specific language governing permissions and limitations under the Licence.
 ~~~
-.
